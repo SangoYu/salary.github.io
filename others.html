@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>计算记录</title>
+    <meta charset="utf-8">
+    <link href="assets/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/style.css" rel="stylesheet">
+</head>
+<body ng-app='app' class="sm-container">
+    
+    <h2 style="text-align: center">其他用户计算记录</h2>
+    <div ng-controller="myController">
+        <table class="table table-hover table-striped">
+            <tbody>
+                <tr ng-repeat="item in list">
+                    <td>有用户在</td>
+                    <td ng-bind="item.time"></td>
+                    <td>计算了</td>
+                    <td ng-bind="item.salary | number:2"></td>
+                    <td>得到税后收入</td>
+                    <td ng-bind="item.aftertax | number:2"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+    <script src="assets/jquery.min.js"></script>
+    <script src="assets/angular.min.js"></script>
+    <script type="text/javascript">
+        angular.module('app',[]).controller('myController',function($scope, $http){
+            $http.get('count');
+            $http.get('others').success(function(res){
+                if(res){
+                    $scope.list = res;
+                }
+            });
+        });
+    </script>
+    <script>
+    var _hmt = _hmt || [];
+    (function() {
+        var hm = document.createElement("script");
+        hm.src = "//hm.baidu.com/hm.js?15d4057c870ef9886575a5e71a308efa";
+        var s = document.getElementsByTagName("script")[0]; 
+        s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-80895780-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+</body>
+</html>

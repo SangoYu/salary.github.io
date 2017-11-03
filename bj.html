@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>2017北京社保计算器</title>
+    <meta charset="utf-8">
+    <meta name="keywords" content="2017,北京,社保计算,社保计算器,2017北京社保计算器,工资计算器,五险一金计算,北京市五险一金,北京市社保,税后工资计算,北京市工资计算,个人所得税计算">
+    <meta name="description" content="北京社保计算器,2017,2017北京社保计算器,工资计算,工资计算器,社保计算,社保计算器,五险一金计算,五险一金计算器,北京市五险一金,北京市社保,税后工资计算,税后工资计算器,北京市工资计算,个人所得税计算,税后收入,税后收入计算,北京市税后收入计算,北京市税后收入计算器">
+    <link href="assets/bootstrap.min.css" rel="stylesheet">
+    <script src="assets/jquery.min.js"></script>
+    <style type="text/css">
+        body{
+            font-family: 'Microsoft Yahei';
+        }
+        .container{
+            width:900px;
+            margin:0 auto;
+        }
+        .header{
+            font-size: 20px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .others{
+        	text-align: center;
+            margin: 20px 0;
+        }
+        input.custom{
+            position: relative;
+            top:2px;
+            left: 4px;
+        }
+        .w30{
+            width: 30%;
+        }
+        .w40{
+            width: 40%;
+        }
+        .ad-holder-left{
+            position: absolute;
+            z-index: 999;
+            top: 10%;
+            left: 0;
+        }
+
+        .ad-holder-right{
+            position: absolute;
+            z-index: 999;
+            top: 10%;
+            right: 0;
+        }
+
+        .ad-holder{
+            width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .rectangle-adholder{
+            width: 250px;
+            height: 250px;
+        }
+    </style>
+
+    <script>
+    var _hmt = _hmt || [];
+    (function() {
+        var hm = document.createElement("script");
+        hm.src = "//hm.baidu.com/hm.js?15d4057c870ef9886575a5e71a308efa";
+        var s = document.getElementsByTagName("script")[0]; 
+        s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-80895780-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+
+</head>
+<body>
+<div class="col-sm-12">
+    <div ng-controller="main" class="container">
+        <div class="header">2017年北京市社保计算器</div>
+    
+
+        <div class="others">
+            <a class="btn btn-primary" href="/" target="_blank">上海社保计算器</a>
+            <a class="btn btn-primary" href="others.html" target="_blank">用户查询记录</a>
+            <a class="btn btn-primary" href="analytics.html" target="_blank">所有查询统计</a>
+            <a class="btn btn-primary" href="message.html" target="_blank">留言板</a>
+        </div>
+        <div class="input-group pretax-group">
+            <span class="input-group-addon">税前工资：</span>
+            <span class="input-group-addon">￥</span>
+            <input type="text" class="form-control" ng-model="pretaxBefore" ng-change="calculateAll()" placeholder="请输入税前月薪">
+            <span class="input-group-addon danger">元</span>
+
+            <span class="input-group-addon">缴纳补充公积金：</span>
+            <span class="input-group-addon">
+                <input type="checkbox" ng-model="hasExtrahouse" ng-change="changeHasExtra()">
+                {{hasExtrahouse ? "是" : "否"}}
+            </span>
+            <span class="input-group-addon">补充公积金缴纳比率：</span>
+            <input type="text" class="form-control" ng-model="extrahouse" ng-disabled="!hasExtrahouse"
+            ng-change="changeExtraRate()">
+            <span class="input-group-addon">%</span>
+        </div>
+        <div class="input-group pretax-group">
+            <span class="input-group-addon">自定义基数：</span>
+            <span class="input-group-addon">
+                <input type="checkbox" ng-model="customRate"  ng-change="changeCustomRate()">
+                {{customRate ? "是" : "否"}}
+            </span>
+
+            <span class="input-group-addon">最低标准：</span>
+            <span class="input-group-addon">
+                <input type="checkbox" ng-model="leastBase" ng-change="changeLeast()">
+                {{leastBase ? "是" : "否"}}
+            </span>
+
+            <span class="input-group-addon">避税：</span>
+            <span class="input-group-addon">
+                <input type="checkbox" ng-model="notax" ng-change="calculateAll()">
+                {{notax ? "是" : "否"}}
+            </span>
+
+            <span class="input-group-addon">社保基数：</span>
+            <input type="text" class="form-control" ng-model="insbase.actual" ng-disabled="!customRate"
+             ng-change="calculateAll()">
+            <span class="input-group-addon">公积金基数：</span>
+            <input type="text" class="form-control" ng-model="housebase.actual" ng-disabled="!customRate"
+             ng-change="calculateAll()">
+
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                        <th></th>
+                        <th colspan="2" width="30%">个人缴纳</th>
+                        <th colspan="2" width="30%">单位缴纳</th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>养老保险</td>
+                        <td colspan="2">
+                            <span ng-bind="person.account.pension | number : 2"></span>
+                            <span ng-bind="person.rated.pension | percent"></span>
+                        </td>
+                        <td colspan="2">
+                            <span ng-bind="company.account.pension | number : 2"></span>
+                            <span ng-bind="company.rated.pension | percent"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>医疗保险</td>
+                        <td colspan="2">
+                            <span ng-bind="person.account.medical | number : 2"></span>
+                            <span ng-bind="person.rated.medical | percent"></span>
+                        </td>
+                        <td colspan="2">
+                            <span ng-bind="company.account.medical | number : 2"></span>
+                            <span ng-bind="company.rated.medical | percent"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>失业保险</td>
+                        <td colspan="2">
+                            <span ng-bind="person.account.unemployment | number : 2"></span>
+                            <span ng-bind="person.rated.unemployment | percent"></span>
+                        </td>
+                        <td colspan="2">
+                            <span ng-bind="company.account.unemployment | number : 2"></span>
+                            <span ng-bind="company.rated.unemployment | percent"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>工伤保险</td>
+                        <td colspan="2">
+                            <span>-</span>
+                        </td>
+                        <td colspan="2">
+                            <span ng-bind="company.account.injury | number : 2"></span>
+                            <span ng-bind="company.rated.injury | percent"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>生育保险</td>
+                        <td colspan="2">
+                            <span>-</span>
+                        </td>
+                        <td colspan="2">
+                            <span ng-bind="company.account.birth | number : 2"></span>
+                            <span ng-bind="company.rated.birth | percent"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>基本住房公积金</td>
+                        <td colspan="2">
+                            <span ng-bind="person.account.house | number : 2"></span>
+                            <span ng-bind="person.rated.house | percent"></span>
+                        </td>
+                        <td colspan="2">
+                            <span ng-bind="company.account.house | number : 2"></span>
+                            <span ng-bind="company.rated.house | percent"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>补充住房公积金</td>
+                        <td colspan="2">
+                            <span ng-bind="person.account.extrahouse | number : 2"></span>
+                            <span ng-bind="company.rated.extrahouse | percent"></span>
+                        </td>
+                        <td colspan="2">
+                            <span ng-bind="company.account.extrahouse | number : 2"></span>
+                            <span ng-bind="company.rated.extrahouse | percent"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>共计</td>
+                        <td colspan="2">
+                            <span ng-bind="person.total | number:2"></span>
+                        </td>
+                        <td colspan="2">
+                            <span ng-bind="company.total | number:2"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>扣除社保公积金月薪</td>
+                        <td colspan="2">
+                            <span ng-bind="person.after | number:2"></span>
+                        </td>
+                        <td colspan="2"></td>
+                    </tr>
+                    <tr>
+                        <td>个税</td>
+                        <td colspan="2">
+                            <span ng-bind="tax | number:2"></span>
+                        </td>
+                        <td colspan="2"></td>
+                    </tr>                   
+                    <tr>
+                        <td>税后收入</td>
+                        <td colspan="2">
+                            <span ng-bind="aftertax | number:2"></span>
+                        </td>
+                        <td colspan="2"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="clearfix"></div>
+<div class="container">
+    <div>
+        <div id="chart" class="pull-left" style="width: 900px; height: 250px"></div>
+    </div>
+    <div>
+        <div id="companyChart" class="pull-left" style="width: 900px; height: 250px"></div>
+    </div>
+</div>
+
+	<script src="assets/underscore-min.js"></script>
+    <script src="assets/angular.min.js"></script>
+    <script src="assets/echarts.min.js"></script>
+    <script src="assets/vintage.js"></script>
+    <script type="text/javascript">
+        var app=angular.module('myApp',[]);
+        app.controller('main', ['$scope', '$http', function($scope, $http){
+
+            $http.get('count');
+            
+        	var myChart = echarts.init(document.getElementById('chart'),'vintage');
+        	var option = {
+        	    title : {
+        	        text: '个人税前工资去向',
+        	        x:'center'
+        	    },
+        	    tooltip : {
+        	        trigger: 'item',
+        	        formatter: "{a} <br/>{b} : {c} ({d}%)"
+        	    },
+        	    legend: {
+        	        orient: 'vertical',
+        	        left: 'left',
+        	        data: ['养老保险','医疗保险','失业保险','基本住房公积金'
+        	        		,'补充住房公积金','个人所得税','税后收入']
+        	    },
+        	    series : [
+        	        {
+        	            name: '详细信息',
+        	            type: 'pie',
+        	            radius : '55%',
+        	            center: ['50%', '60%'],
+        	            data:[
+        	                {value:0, name:'税后收入'},
+        	                {value:0, name:'养老保险'},
+        	                {value:0, name:'医疗保险'},
+        	                {value:0, name:'失业保险'},
+        	                {value:0, name:'基本住房公积金'},
+        	                {value:0, name:'补充住房公积金'},
+        	                {value:0, name:'个人所得税'}
+        	            ],
+        	            itemStyle: {
+        	                emphasis: {
+        	                    shadowBlur: 10,
+        	                    shadowOffsetX: 0,
+        	                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+        	                }
+        	            }
+        	        }
+        	    ]
+        	};
+
+        	var companyChart = echarts.init(document.getElementById('companyChart'),'vintage');
+        	var companyOption = {
+        	    title : {
+        	        text: '公司支出情况',
+        	        x:'center'
+        	    },
+        	    tooltip : {
+        	        trigger: 'item',
+        	        formatter: "{a} <br/>{b} : {c} ({d}%)"
+        	    },
+        	    legend: {
+        	        orient: 'vertical',
+        	        left: 'left',
+        	        data: ['养老保险','医疗保险','失业保险','工伤保险','生育保险',
+        	        '基本住房公积金','补充住房公积金','支付工资']
+        	    },
+        	    series : [
+        	        {
+        	            name: '详细信息',
+        	            type: 'pie',
+        	            radius : '55%',
+        	            center: ['50%', '60%'],
+        	            data:[
+        	                {value:0, name:'支付工资'},
+        	                {value:0, name:'养老保险'},
+        	                {value:0, name:'医疗保险'},
+        	                {value:0, name:'失业保险'},
+        	                {value:0, name:'工伤保险'},
+        	                {value:0, name:'生育保险'},
+        	                {value:0, name:'基本住房公积金'},
+        	                {value:0, name:'补充住房公积金'}
+        	            ],
+        	            itemStyle: {
+        	                emphasis: {
+        	                    shadowBlur: 10,
+        	                    shadowOffsetX: 0,
+        	                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+        	                }
+        	            }
+        	        }
+        	    ]
+        	};
+
+            $scope.person={
+                account:{
+                },
+                rated:{
+                    pension:0.08,
+                    medical:0.02,
+                    unemployment:0.002,
+                    injury:null,
+                    birth:null,
+                    house:0.12,
+                    extrahouse:0
+                },
+                rate:{
+                },
+                total:0
+            };
+            $scope.company={
+                account:{
+                },
+                rated:{
+                    pension:0.19,
+                    medical:0.10,
+                    unemployment:0.008,
+                    injury:0.004,
+                    birth:0.008,
+                    house:0.12,
+                    extrahouse:0
+                },
+                rate:{
+
+                },
+                total:0
+            };
+
+            $scope.insbase={
+                min:2834,
+                max:21258,
+                actual:0
+            };
+            $scope.housebase={
+                min:2148,
+                max:21258,
+                actual:0
+            };
+
+            //更改工资时获取基数
+            function getBaseNumber(){
+                if($scope.pretax > $scope.insbase.min && $scope.pretax < $scope.insbase.max )
+                    $scope.insbase.actual=$scope.pretax;
+                else if($scope.pretax > $scope.insbase.max)
+                    $scope.insbase.actual=$scope.insbase.max;
+                else if($scope.pretax < $scope.insbase.min)
+                    $scope.insbase.actual=$scope.insbase.min;
+
+                if($scope.pretax > $scope.housebase.min && $scope.pretax < $scope.housebase.max )
+                    $scope.housebase.actual=$scope.pretax;
+                else if($scope.pretax > $scope.housebase.max)
+                    $scope.housebase.actual=$scope.housebase.max;
+                else if($scope.pretax < $scope.housebase.min)
+                    $scope.housebase.actual=$scope.housebase.min;
+            }
+
+            //计算所有数额
+            $scope.calculateAll = function(){
+                var pretax = $scope.pretaxBefore;
+                var limit = $scope.limit;
+                $scope.pretax=pretax;
+                if(!pretax||pretax<limit)  $scope.pretax=limit;
+                if(pretax>Math.pow(2,53)) return;
+                $scope.person.total=$scope.company.total=0;
+
+                if(!$scope.customRate){
+                    getBaseNumber();
+                }
+
+                angular.forEach($scope.person.rated,function(value,i){
+
+                    $scope.person.account[i]=$scope.insbase.actual*$scope.person.rated[i];
+                    $scope.company.account[i]=$scope.insbase.actual*$scope.company.rated[i];
+
+                    if(i=="house"){
+                        $scope.person.account[i]=$scope.housebase.actual*$scope.person.rated[i];
+                        $scope.company.account[i]=$scope.housebase.actual*$scope.company.rated[i];
+                    }
+
+                    $scope.person.total += $scope.person.account[i];
+                    $scope.company.total += $scope.company.account[i];
+                });
+                $scope.person.after=$scope.pretax-$scope.person.total;
+                if(!$scope.notax){
+                    $scope.tax = caltax($scope.person.after);
+                }else{
+                    $scope.tax = 0;
+                }
+                $scope.aftertax=$scope.person.after-$scope.tax;
+
+
+                //生成图表
+                var values = [
+                	$scope.aftertax,
+                	$scope.person.account['pension'],
+                	$scope.person.account['medical'],
+                	$scope.person.account['unemployment'],
+                	$scope.person.account['house'],
+                	$scope.person.account['extrahouse'],
+                	$scope.tax
+                ];
+
+                var companyValues = [
+                	$scope.pretaxBefore,
+                	$scope.company.account['pension'],
+                	$scope.company.account['medical'],
+                	$scope.company.account['unemployment'],
+                	$scope.company.account['injury'],
+                	$scope.company.account['birth'],
+                	$scope.company.account['house'],
+                	$scope.company.account['extrahouse']
+                ];
+
+                angular.forEach(option.series[0].data,function(item,index){
+                	item.value = values[index].toFixed(2);
+                });
+
+                angular.forEach(companyOption.series[0].data,function(item,index){
+                	item.value = Number(companyValues[index]).toFixed(2);
+                });
+
+                myChart.setOption(option);
+                companyChart.setOption(companyOption);
+
+            }
+
+            //初始化各项数据
+            calculateLimit();
+            initBase();
+
+            //改变补充公积金比率
+            $scope.changeExtraRate = function(){
+                $scope.person.rated.extrahouse = $scope.company.rated.extrahouse = $scope.extrahouse/100;
+                $scope.calculateAll();
+            };
+
+            //是否补充公积金变化
+            $scope.changeHasExtra = function(){
+                $scope.extrahouse = 0;
+                $scope.changeExtraRate();
+            };
+
+            //初始化各项数据
+            function initBase(){
+                $scope.insbase.actual=$scope.insbase.min;
+                $scope.housebase.actual=$scope.housebase.min;
+                $scope.extrahouse = 0;
+            }
+
+            //点击最低标准
+            $scope.changeLeast = function(){
+                if($scope.leastBase){
+                    initBase();
+                    $scope.customRate = true;
+                } 
+                    
+                $scope.calculateAll();
+            };
+
+            //点击自定义基数
+            $scope.changeCustomRate = function(){
+                if(!$scope.customRate) $scope.leastBase = false;
+                $scope.calculateAll();
+            };
+
+            var getResult = _.debounce(function(){
+            	if($scope.pretaxBefore>1000){
+            		$http.post('calculate', {
+                        salary : $scope.pretaxBefore,
+                        insurancebase : $scope.insbase.actual,
+                        housebase : $scope.housebase.actual,
+                        aftertax : $scope.aftertax,
+                        city : '北京'
+                    });
+            	}
+            },500);
+
+            $scope.$watch(function(){
+                return [$scope.pretaxBefore,$scope.aftertax];
+            },function(newValue, oldValue){
+            	if(newValue != oldValue){
+            		getResult();
+            	}
+            }, true);
+
+            //计算最小数目
+            function calculateLimit(){
+                $scope.pretaxBefore = $scope.housebase.min;
+                initBase();
+                $scope.calculateAll();
+                $scope.limit = $scope.person.total;
+
+                $scope.pretaxBefore = 0;
+                $scope.calculateAll();
+
+                $scope.pretaxBefore = "";
+            }
+
+            //计算个人所得税
+            function caltax(account){
+                account=account-3500;
+                if(account<0) return 0;
+                var taxrate=[
+                    {
+                        min:0,
+                        max:1500,
+                        rate:0.03,
+                        sub:0
+                    },
+                    {
+                        min:1500,
+                        max:4500,
+                        rate:0.1,
+                        sub:105
+                    },
+                    {
+                        min:4500,
+                        max:9000,
+                        rate:0.2,
+                        sub:555
+                    },
+                    {
+                        min:9000,
+                        max:35000,
+                        rate:0.25,
+                        sub:1005
+                    },
+                    {
+                        min:35000,
+                        max:55000,
+                        rate:0.3,
+                        sub:2755
+                    },
+                    {
+                        min:55000,
+                        max:80000,
+                        rate:0.35,
+                        sub:5505
+                    },
+                    {
+                        min:80000,
+                        max:Math.pow(2,53),
+                        rate:0.45,
+                        sub:13505
+                    }
+                ];
+
+                var rateObj = {};
+                for(var i=0;i<taxrate.length;i++){
+                    if(account>taxrate[i].min && account<taxrate[i].max){
+                        rateObj=taxrate[i];
+                        break;
+                    }
+                }
+                var tax=account*rateObj.rate-rateObj.sub;
+                return  tax;
+            }
+
+        }]).filter('percent',function(){
+            return function(obj){
+                return "("+ (obj*100).toFixed(2) +"%)"
+            }
+        });
+        angular.element(document).ready(function(){
+            angular.bootstrap(document,['myApp']);
+        });
+    </script>
+
+</body>
+</html>
