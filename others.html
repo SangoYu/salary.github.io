@@ -29,8 +29,8 @@
     <script src="assets/angular.min.js"></script>
     <script type="text/javascript">
         angular.module('app',[]).controller('myController',function($scope, $http){
-            $http.get('count');
-            $http.get('others').success(function(res){
+            $http.get('http://api.dhumedia.cn/count');
+            $http.get('http://api.dhumedia.cn/others').success(function(res){
                 if(res){
                     $scope.list = res;
                 }

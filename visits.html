@@ -36,7 +36,7 @@
 	<script src="//cdn.bootcss.com/angular.js/1.5.7/angular.min.js"></script>
 	<script type="text/javascript">
 		angular.module('app',[]).controller('myController',function($scope, $http){
-			$http.get('visits.php').success(function(res){
+			$http.get('http://api.dhumedia.cn/visits').success(function(res){
 				if(res){
 					$scope.list = res;
 				}
