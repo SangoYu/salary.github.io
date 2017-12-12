@@ -14,7 +14,7 @@
             <tbody>
                 <tr ng-repeat="item in list">
                     <td>有用户在</td>
-                    <td ng-bind="item.time"></td>
+                    <td ng-bind="item.time | date:'yyyy-MM-dd HH:mm:ss'"></td>
                     <td>计算了</td>
                     <td ng-bind="item.salary | number:2"></td>
                     <td>得到税后收入</td>
