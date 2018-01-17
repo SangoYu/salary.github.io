@@ -106,7 +106,7 @@
 		<div class="message-list" id="message-list">
 			<h4 class="text-center">留言汇总</h4>
 			<div class="form-group message-item" ng-repeat="item in messageList">
-				<p>{{item.name}} 在 {{item.time}} 写道：</p>
+				<p>{{item.name}} 在 {{item.time | date: 'yyyy-MM-dd HH:mm:ss'}} 写道：</p>
 				<p class="text-info">{{item.message}}</p>
 			</div>
 		</div>
