@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>2018北京社保计算器(按起征点5000计算)</title>
+    <title>2018北京社保计算器(按起征点5000计算,专项附加扣除)</title>
     <meta charset="utf-8">
-    <meta name="keywords" content="5000起征点,北京,社保计算,社保计算器,2018北京社保计算器,工资计算器,五险一金计算,北京市五险一金,北京市社保,税后工资计算,北京市工资计算,个人所得税计算">
+    <meta name="keywords" content="5000起征点,北京,社保计算,社保计算器,2018北京社保计算器,工资计算器,五险一金计算,北京市五险一金,北京市社保,税后工资计算,北京市工资计算,个人所得税计算,专项附加扣除">
     <meta name="description" content="北京社保计算器,5000起征点,2018北京社保计算器,工资计算,工资计算器,社保计算,社保计算器,五险一金计算,五险一金计算器,北京市五险一金,北京市社保,税后工资计算,税后工资计算器,北京市工资计算,个人所得税计算,税后收入,税后收入计算,北京市税后收入计算,北京市税后收入计算器">
     <link href="https://cdn.bootcss.com/twitter-bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.bootcss.com/jquery/1.6.4/jquery.min.js"></script>
@@ -86,7 +86,7 @@
 <body>
 <div class="col-sm-12">
     <div ng-controller="main" class="container">
-        <div class="header">2018年北京市社保计算器(按起征点5000计算)</div>
+        <div class="header">2018年北京市社保计算器(按起征点5000计算,专项附加扣除)</div>
     
 
         <div class="others">
@@ -98,7 +98,7 @@
         <div class="input-group pretax-group">
             <span class="input-group-addon">税前工资：</span>
             <span class="input-group-addon">￥</span>
-            <input type="text" class="form-control" ng-model="pretaxBefore" ng-change="calculateAll()" placeholder="请输入税前月薪">
+            <input type="number" min="0"  class="form-control" ng-model="pretaxBefore" ng-change="calculateAll()" placeholder="请输入税前月薪">
             <span class="input-group-addon danger">元</span>
 
             <span class="input-group-addon">缴纳补充公积金：</span>
@@ -107,7 +107,7 @@
                 {{hasExtrahouse ? "是" : "否"}}
             </span>
             <span class="input-group-addon">补充公积金缴纳比率：</span>
-            <input type="text" class="form-control" ng-model="extrahouse" ng-disabled="!hasExtrahouse"
+            <input type="number" min="0"  class="form-control" ng-model="extrahouse" ng-disabled="!hasExtrahouse"
             ng-change="changeExtraRate()">
             <span class="input-group-addon">%</span>
         </div>
@@ -131,12 +131,15 @@
             </span>
 
             <span class="input-group-addon">社保基数：</span>
-            <input type="text" class="form-control" ng-model="insbase.actual" ng-disabled="!customRate"
+            <input type="number" min="0"  class="form-control" ng-model="insbase.actual" ng-disabled="!customRate"
              ng-change="calculateAll()">
             <span class="input-group-addon">公积金基数：</span>
-            <input type="text" class="form-control" ng-model="housebase.actual" ng-disabled="!customRate"
+            <input type="number" min="0"  class="form-control" ng-model="housebase.actual" ng-disabled="!customRate"
              ng-change="calculateAll()">
-
+        </div>
+        <div class="input-group pretax-group">
+            <span class="input-group-addon">专项附加扣除：</span>
+            <input type="number" min="0" class="form-control" ng-model="subAmount"  ng-change="calculateAll()">
         </div>
         <div class="table-responsive">
             <table class="table table-hover">
@@ -265,6 +268,20 @@
                         </td>
                         <td colspan="2"></td>
                     </tr>
+                    <tr>
+                        <td>专项扣除后个税 (2019年1月1日实行)</td>
+                        <td colspan="2">
+                            <span ng-bind="subtax | number:2"></span>
+                        </td>
+                        <td colspan="2"></td>
+                    </tr>
+                    <tr>
+                        <td>专项扣除后收入 (2019年1月1日实行)</td>
+                        <td colspan="2">
+                            <span ng-bind="aftersubtax | number:2"></span>
+                        </td>
+                        <td colspan="2"></td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -281,7 +298,7 @@
 </div>
 
 	<script src="https://cdn.bootcss.com/underscore.js/1.8.3/underscore-min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular.min.js"></script>
+    <script src="https://cdn.bootcss.com/angular.js/1.5.8/angular.min.js"></script>
     <script src="https://cdn.bootcss.com/echarts/3.3.0/echarts.min.js"></script>
     <script src="http://cdn.dhumedia.cn/vintage.js"></script>
     <script type="text/javascript">
@@ -467,12 +484,13 @@
                 if(!$scope.notax){
                     $scope.tax = caltax5000($scope.person.after);
                     $scope.tax3500 = caltax3500($scope.person.after);
+                    $scope.subtax = caltax5000($scope.person.after - $scope.subAmount);
                 }else{
                     $scope.tax = 0;
                 }
                 $scope.aftertax=$scope.person.after-$scope.tax;
                 $scope.aftertax3500=$scope.person.after-$scope.tax3500;
-
+                $scope.aftersubtax=$scope.person.after-$scope.subtax;
 
                 //生成图表
                 var values = [
@@ -530,6 +548,7 @@
                 $scope.insbase.actual=$scope.insbase.min;
                 $scope.housebase.actual=$scope.housebase.min;
                 $scope.extrahouse = 0;
+                $scope.subAmount = 0;
             }
 
             //点击最低标准

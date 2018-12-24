@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>2018上海社保计算器(按起征点5000计算)</title>
+    <title>2018上海社保计算器(按起征点5000计算,专项附加扣除)</title>
     <meta charset="utf-8">
     <meta name="keywords" content="5000起征点,上海,社保计算,社保计算器,2018上海社保计算器,工资计算器,五险一金计算,上海市五险一金,上海市社保,税后工资计算,上海市工资计算,个人所得税计算">
     <meta name="description" content="上海社保计算器,5000起征点,2018上海社保计算器,工资计算,工资计算器,社保计算,社保计算器,五险一金计算,五险一金计算器,上海市五险一金,上海市社保,税后工资计算,税后工资计算器,上海市工资计算,个人所得税计算,税后收入,税后收入计算,上海市税后收入计算,上海市税后收入计算器">
@@ -18,7 +18,7 @@
         .container{
             margin-top: 2em;
         }
-        input[type='text']{
+        input[type='number']{
             width: 4em;
         }
         input[type='checkbox']{
@@ -80,7 +80,7 @@
             <table class="table table-border">
                 <tr>
                     <td width="60%">税前工资：</td>
-                    <td>￥<input type="text" ng-model="pretaxBefore" ng-change="calculateAll()">元</td>
+                    <td>￥<input type="number" min=0 ng-model="pretaxBefore" ng-change="calculateAll()">元</td>
                 </tr>
                 <tr>
                     <td>缴纳补充公积金：</td>
@@ -89,7 +89,7 @@
                 </tr>
                 <tr>
                     <td>补充公积金缴纳比率：</td>
-                    <td><input type="text" ng-model="extrahouse" ng-disabled="!hasExtrahouse"
+                    <td><input type="number" min=0 ng-model="extrahouse" ng-disabled="!hasExtrahouse"
                     ng-change="changeExtraRate()">
                     <span class="input-item-addon">%</span></td>
                 </tr>
@@ -105,17 +105,21 @@
                 </tr>
                 <tr>
                     <td>社保基数：</td>
-                    <td><input type="text" ng-model="insbase.actual" 
+                    <td><input type="number" min=0 ng-model="insbase.actual" 
                     ng-disabled="!customRate" ng-change="calculateAll()"></td>
                 </tr>
                 <tr>
                     <td>公积金基数：</td>
-                    <td><input type="text" ng-model="housebase.actual" ng-disabled="!customRate" ng-change="calculateAll()"></td>
+                    <td><input type="number" min=0 ng-model="housebase.actual" ng-disabled="!customRate" ng-change="calculateAll()"></td>
                 </tr>
                 <tr>
                     <td>避税：</td>
                     <td><input type="checkbox" ng-model="notax" ng-change="calculateAll()">
                     {{notax ? "是" : "否"}}</td>
+                </tr>
+                <tr>
+                    <td width="60%">专项附加扣除：</td>
+                    <td><input type="number" min=0 ng-model="subAmount" ng-change="calculateAll()">元</td>
                 </tr>
             </table>
         </div>
@@ -145,20 +149,6 @@
                         <td colspan="2"></td>
                     </tr>
                     <tr>
-                        <td>按3500起征点个税</td>
-                        <td colspan="2">
-                            <span ng-bind="tax3500 | number:2"></span>
-                        </td>
-                        <td colspan="2"></td>
-                    </tr>                   
-                    <tr>
-                        <td>按3500起征点税后收入</td>
-                        <td colspan="2">
-                            <span ng-bind="aftertax3500 | number:2"></span>
-                        </td>
-                        <td colspan="2"></td>
-                    </tr>
-                    <tr>
                         <td>按5000起征点个税</td>
                         <td colspan="2">
                             <span ng-bind="tax | number:2"></span>
@@ -169,6 +159,33 @@
                         <td>按5000起征点税后收入</td>
                         <td colspan="2">
                             <span ng-bind="aftertax | number:2"></span>
+                        </td>
+                        <td colspan="2"></td>
+                    </tr>
+                    <tr>
+                        <td>专项扣除后个税</td>
+                        <td colspan="2">
+                            <span ng-bind="subtax | number:2"></span>
+                        <td colspan="2"></td>
+                    </tr>                   
+                    <tr>
+                        <td>专项扣除后收入</td>
+                        <td colspan="2">
+                            <span ng-bind="aftersubtax | number:2"></span>
+                        </td>
+                        <td colspan="2"></td>
+                    </tr>
+                    <tr>
+                        <td>按3500起征点个税</td>
+                        <td colspan="2">
+                            <span ng-bind="tax3500 | number:2"></span>
+                        </td>
+                        <td colspan="2"></td>
+                    </tr>                   
+                    <tr>
+                        <td>按3500起征点税后收入</td>
+                        <td colspan="2">
+                            <span ng-bind="aftertax3500 | number:2"></span>
                         </td>
                         <td colspan="2"></td>
                     </tr>
@@ -254,7 +271,7 @@
     </div>
 </div>
     <script src="https://cdn.bootcss.com/underscore.js/1.8.3/underscore-min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular.min.js"></script>
+    <script src="https://cdn.bootcss.com/angular.js/1.5.8/angular.min.js"></script>
     <script type="text/javascript">
         var app=angular.module('myApp',[]);
         app.controller('main', ['$scope', '$http', function($scope, $http){
@@ -351,12 +368,14 @@
                 $scope.person.after=$scope.pretax-$scope.person.total;
                 if(!$scope.notax){
                     $scope.tax = caltax5000($scope.person.after);
+                    $scope.subtax = caltax5000($scope.person.after - $scope.subAmount);
                     $scope.tax3500 = caltax3500($scope.person.after);
                 }else{
                     $scope.tax = 0;
                 }
                 $scope.aftertax=$scope.person.after-$scope.tax;
                 $scope.aftertax3500=$scope.person.after-$scope.tax3500;
+                $scope.aftersubtax=$scope.person.after-$scope.subtax;
             }
 
             //初始化各项数据
@@ -380,6 +399,7 @@
                 $scope.insbase.actual=$scope.insbase.min;
                 $scope.housebase.actual=$scope.housebase.min;
                 $scope.extrahouse = 0;
+                $scope.subAmount = 0;
             }
 
             //点击最低标准
