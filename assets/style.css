@@ -35,3 +35,13 @@ body{
     top: 10%;
     right: 0;
 }
+
+.reward{
+    margin-top: 30px;
+    text-align: center;
+}
+
+.reward .img{
+    margin: 0 40px;
+    width: 200px;
+}

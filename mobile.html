@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>2018上海社保计算器(按起征点5000计算,专项附加扣除)</title>
+    <title>2019上海社保计算器(按起征点5000计算,专项附加扣除)</title>
     <meta charset="utf-8">
-    <meta name="keywords" content="5000起征点,上海,社保计算,社保计算器,2018上海社保计算器,工资计算器,五险一金计算,上海市五险一金,上海市社保,税后工资计算,上海市工资计算,个人所得税计算">
-    <meta name="description" content="上海社保计算器,5000起征点,2018上海社保计算器,工资计算,工资计算器,社保计算,社保计算器,五险一金计算,五险一金计算器,上海市五险一金,上海市社保,税后工资计算,税后工资计算器,上海市工资计算,个人所得税计算,税后收入,税后收入计算,上海市税后收入计算,上海市税后收入计算器">
+    <meta name="keywords" content="5000起征点,上海,社保计算,社保计算器,2019上海社保计算器,工资计算器,五险一金计算,上海市五险一金,上海市社保,税后工资计算,上海市工资计算,个人所得税计算">
+    <meta name="description" content="上海社保计算器,5000起征点,2019上海社保计算器,工资计算,工资计算器,社保计算,社保计算器,五险一金计算,五险一金计算器,上海市五险一金,上海市社保,税后工资计算,税后工资计算器,上海市工资计算,个人所得税计算,税后收入,税后收入计算,上海市税后收入计算,上海市税后收入计算器">
     <link href="https://cdn.bootcss.com/twitter-bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
     <style type="text/css">
         body{
@@ -61,7 +61,7 @@
 <div class="col-xs-12">
 <div class="row">
     <div ng-controller="main" class="container">
-        <!-- <div class="header">2018年上海市</div>
+        <!-- <div class="header">2019年上海市</div>
         <div class="header">社保计算器</div> -->
 
         <div style="display: block; text-align: center">
@@ -151,27 +151,27 @@
                     <tr>
                         <td>按5000起征点个税</td>
                         <td colspan="2">
-                            <span ng-bind="tax | number:2"></span>
+                            <span ng-bind="tax5000 | number:2"></span>
                         </td>
                         <td colspan="2"></td>
                     </tr>                   
                     <tr>
                         <td>按5000起征点税后收入</td>
                         <td colspan="2">
-                            <span ng-bind="aftertax | number:2"></span>
+                            <span ng-bind="aftertax5000 | number:2"></span>
                         </td>
                         <td colspan="2"></td>
                     </tr>
                     <tr>
                         <td>专项扣除后个税</td>
                         <td colspan="2">
-                            <span ng-bind="subtax | number:2"></span>
+                            <span ng-bind="tax | number:2"></span>
                         <td colspan="2"></td>
                     </tr>                   
                     <tr>
                         <td>专项扣除后收入</td>
                         <td colspan="2">
-                            <span ng-bind="aftersubtax | number:2"></span>
+                            <span ng-bind="aftertax | number:2"></span>
                         </td>
                         <td colspan="2"></td>
                     </tr>
@@ -367,15 +367,15 @@
                 });
                 $scope.person.after=$scope.pretax-$scope.person.total;
                 if(!$scope.notax){
-                    $scope.tax = caltax5000($scope.person.after);
-                    $scope.subtax = caltax5000($scope.person.after - $scope.subAmount);
+                    $scope.tax5000 = caltax5000($scope.person.after);
                     $scope.tax3500 = caltax3500($scope.person.after);
+                    $scope.tax = caltax5000($scope.person.after - $scope.subAmount);
                 }else{
                     $scope.tax = 0;
                 }
-                $scope.aftertax=$scope.person.after-$scope.tax;
+                $scope.aftertax5000=$scope.person.after-$scope.tax5000;
                 $scope.aftertax3500=$scope.person.after-$scope.tax3500;
-                $scope.aftersubtax=$scope.person.after-$scope.subtax;
+                $scope.aftertax=$scope.person.after-$scope.tax;
             }
 
             //初始化各项数据

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>2018上海社保计算器(按起征点5000计算,专项附加扣除)</title>
+    <title>2019上海社保计算器(按起征点5000计算,专项附加扣除)</title>
     <meta charset="utf-8">
-    <meta name="keywords" content="5000起征点,上海,北京,社保计算,社保计算器,2018上海社保计算器,2018北京社保计算器,工资计算器,五险一金计算,上海市五险一金,上海市社保,税后工资计算,上海市工资计算,个人所得税计算,专项附加扣除">
-    <meta name="description" content="上海社保计算器,5000起征点,2018上海社保计算器,工资计算,工资计算器,社保计算,社保计算器,五险一金计算,五险一金计算器,上海市五险一金,上海市社保,税后工资计算,税后工资计算器,上海市工资计算,个人所得税计算,税后收入,税后收入计算,上海市税后收入计算,上海市税后收入计算器">
+    <meta name="keywords" content="5000起征点,上海,北京,社保计算,社保计算器,2019上海社保计算器,2019北京社保计算器,工资计算器,五险一金计算,上海市五险一金,上海市社保,税后工资计算,上海市工资计算,个人所得税计算,专项附加扣除">
+    <meta name="description" content="上海社保计算器,5000起征点,2019上海社保计算器,工资计算,工资计算器,社保计算,社保计算器,五险一金计算,五险一金计算器,上海市五险一金,上海市社保,税后工资计算,税后工资计算器,上海市工资计算,个人所得税计算,税后收入,税后收入计算,上海市税后收入计算,上海市税后收入计算器">
     <link href="https://cdn.bootcss.com/twitter-bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.bootcss.com/jquery/1.6.4/jquery.min.js"></script>
     <style type="text/css">
@@ -103,7 +103,7 @@
 
 <div class="col-sm-12">
     <div ng-controller="main" class="container">
-        <div class="header">2018年上海市社保计算器(按起征点5000计算,专项附加扣除)</div>
+        <div class="header">2019年上海市社保计算器(按起征点5000计算,专项附加扣除)</div>
 
         <div class="others">
 	        <a class="btn btn-primary" href="bj.html" target="_blank">北京社保计算器</a>
@@ -117,14 +117,8 @@
             <input type="number" min="0" class="form-control" ng-model="pretaxBefore" ng-change="calculateAll()" placeholder="请输入税前月薪">
             <span class="input-group-addon danger">元</span>
 
-            <span class="input-group-addon">缴纳补充公积金：</span>
-            <span class="input-group-addon">
-                <input type="checkbox" ng-model="hasExtrahouse" ng-change="changeHasExtra()">
-                {{hasExtrahouse ? "是" : "否"}}
-            </span>
-            <span class="input-group-addon">补充公积金缴纳比率：</span>
-            <input type="number" min="0" class="form-control" ng-model="extrahouse" ng-disabled="!hasExtrahouse"
-            ng-change="changeExtraRate()">
+            <span class="input-group-addon">公积金缴纳比例：(上海市 5% ~ 7% )</span>
+            <input ng-init="houseRate=7" type="number" class="form-control" ng-model="houseRate" ng-change="changeHouseRate()">
             <span class="input-group-addon">%</span>
         </div>
         <div class="input-group pretax-group">
@@ -155,6 +149,15 @@
 
         </div>
         <div class="input-group pretax-group">
+            <span class="input-group-addon">缴纳补充公积金：</span>
+            <span class="input-group-addon">
+                <input type="checkbox" ng-model="hasExtrahouse" ng-change="changeHasExtra()">
+                {{hasExtrahouse ? "是" : "否"}}
+            </span>
+            <span class="input-group-addon">补充公积金缴纳比率：</span>
+            <input type="number" min="0" class="form-control" ng-model="extrahouse" ng-disabled="!hasExtrahouse"
+            ng-change="changeExtraRate()">
+            <span class="input-group-addon">%</span>
             <span class="input-group-addon">专项附加扣除：</span>
             <input type="number" min="0" class="form-control" ng-model="subAmount"  ng-change="calculateAll()">
         </div>
@@ -274,28 +277,28 @@
                     <tr>
                         <td>按5000起征点个税</td>
                         <td colspan="2">
-                            <span ng-bind="tax | number:2"></span>
+                            <span ng-bind="tax5000 | number:2"></span>
                         </td>
                         <td colspan="2"></td>
                     </tr>                   
                     <tr>
                         <td>按5000起征点税后收入</td>
                         <td colspan="2">
-                            <span ng-bind="aftertax | number:2"></span>
+                            <span ng-bind="aftertax5000 | number:2"></span>
                         </td>
                         <td colspan="2"></td>
                     </tr>
                     <tr>
                         <td>专项扣除后个税 (2019年1月1日实行)</td>
                         <td colspan="2">
-                            <span ng-bind="subtax | number:2"></span>
+                            <span ng-bind="tax | number:2"></span>
                         </td>
                         <td colspan="2"></td>
                     </tr>
                     <tr>
                         <td>专项扣除后收入 (2019年1月1日实行)</td>
                         <td colspan="2">
-                            <span ng-bind="aftersubtax | number:2"></span>
+                            <span ng-bind="aftertax | number:2"></span>
                         </td>
                         <td colspan="2"></td>
                     </tr>
@@ -317,7 +320,7 @@
 	<script src="https://cdn.bootcss.com/underscore.js/1.8.3/underscore-min.js"></script>
     <script src="https://cdn.bootcss.com/angular.js/1.5.8/angular.min.js"></script>
     <script src="https://cdn.bootcss.com/echarts/3.3.0/echarts.min.js"></script>
-    <script src="http://cdn.dhumedia.cn/vintage.js"></script>
+    <script src="assets/vintage.js"></script>
     <script type="text/javascript">
         var app=angular.module('myApp',[]);
         app.controller('main', ['$scope', '$http', function($scope, $http){
@@ -499,16 +502,25 @@
                 });
                 $scope.person.after=$scope.pretax-$scope.person.total;
                 if(!$scope.notax){
-                    $scope.tax = caltax5000($scope.person.after);
+                    $scope.tax5000 = caltax5000($scope.person.after);
                     $scope.tax3500 = caltax3500($scope.person.after);
-                    $scope.subtax = caltax5000($scope.person.after - $scope.subAmount);
+                    $scope.tax = caltax5000($scope.person.after - $scope.subAmount);
                 }else{
                     $scope.tax = 0;
                 }
-                $scope.aftertax=$scope.person.after-$scope.tax;
+                $scope.aftertax5000=$scope.person.after-$scope.tax5000;
                 $scope.aftertax3500=$scope.person.after-$scope.tax3500;
-                $scope.aftersubtax=$scope.person.after-$scope.subtax;
+                $scope.aftertax=$scope.person.after-$scope.tax;
 
+                function LimitToZero (key) {
+                    $scope[key] = $scope[key]>0?$scope[key]:0;
+                }
+
+                ['aftertax5000', 'aftertax3500', 'aftertax', 'person.after'].forEach(function(key)  {
+                    LimitToZero(key);
+                });
+
+                $scope.person.after = $scope.person.after>0?$scope.person.after:0;
 
                 //生成图表
                 var values = [
@@ -548,6 +560,12 @@
             //初始化各项数据
             calculateLimit();
             initBase();
+
+            //改变公积金缴纳比率
+            $scope.changeHouseRate = function () {
+                $scope.person.rated.house = $scope.company.rated.house = $scope.houseRate/100;
+                $scope.calculateAll();
+            }
 
             //改变补充公积金比率
             $scope.changeExtraRate = function(){
