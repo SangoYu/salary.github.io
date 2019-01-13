@@ -142,8 +142,13 @@
                 {{hasExtrahouse ? "是" : "否"}}
             </span>
             <span class="input-group-addon">补充公积金缴纳比率：</span>
-            <input type="number" min="0"  class="form-control" ng-model="extrahouse" ng-disabled="!hasExtrahouse"
+            <input type="number" min="0" class="form-control" ng-model="extrahouse" ng-disabled="!hasExtrahouse"
             ng-change="changeExtraRate()">
+            <span class="input-group-addon">%</span>
+        </div>
+        <div class="input-group pretax-group">
+            <span class="input-group-addon">工伤保险企业缴纳比例：</span>
+            <input type="number" ng-init="injury=0.2" min="0.2" max="2" step="0.1" class="form-control" ng-model="injury" ng-model-options="{allowInvalid:true}"  ng-change="changeCompanyInjury()">
             <span class="input-group-addon">%</span>
         </div>
         <div class="table-responsive">
@@ -569,6 +574,12 @@
              //改变公积金缴纳比率
             $scope.changeHouseRate = function () {
                 $scope.person.rated.house = $scope.company.rated.house = $scope.houseRate/100;
+                $scope.calculateAll();
+            }
+
+            //改变工伤保险比例
+            $scope.changeCompanyInjury = function () {
+                $scope.company.rated.injury = $scope.injury/100;
                 $scope.calculateAll();
             }
 
