@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>2019上海按年计算个税</title>
+    <meta charset="utf-8">
+      <style>
+        body{
+          line-height: 25px;
+        }
+
+        h2{
+          text-align: center;
+        }
+
+        input {
+          height: 20px;
+          margin: 5px;
+        }
+
+        #root {
+          width: 700px;
+          margin: 0 auto;
+        }
+
+        .person{
+          display: inline-block;
+          width: 200px;
+          margin-right: 10px;
+        }
+
+        .line{
+          border-top: 1px solid #ccc;
+          line-height: 35px;
+        }
+
+        .company {
+          display: inline-block;
+          width: 200px;
+        }
+
+        .name {
+          display: inline-block;
+          width: 200px;
+          margin-right: 30px;
+          text-align: right;
+        }
+
+        .ad-holder-left{
+            position: absolute;
+            z-index: 999;
+            top: 10%;
+            left: 0;
+        }
+
+        .ad-holder-right{
+            position: absolute;
+            z-index: 999;
+            top: 10%;
+            right: 0;
+        }
+
+        .ad-holder{
+            width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+      </style>
+
+      <script>
+        var _hmt = _hmt || [];
+        (function () {
+          var hm = document.createElement("script");
+          hm.src = "//hm.baidu.com/hm.js?15d4057c870ef9886575a5e71a308efa";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      </script>
+
+      <script>
+        (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+          (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date(); a = s.createElement(o),
+          m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-80895780-1', 'auto');
+        ga('send', 'pageview');
+
+      </script>
+</head>
+
+<body>
+    <h2>2019上海按年计算个税</h2>
+    
+    <div id="root"></div>
+
+    <script src="https://cdn.bootcss.com/babel-standalone/7.0.0-beta.3/babel.min.js"></script>
+    <script src="https://cdn.bootcss.com/react/16.9.0-rc.0/umd/react.production.min.js"></script>
+    <script src="https://cdn.bootcss.com/react-dom/16.9.0-alpha.0/umd/react-dom.production.min.js"></script>
+
+    <script type="text/babel">
+        class LineShower extends React.Component {
+          constructor (props) {
+            super(props);
+
+            this.state = {
+              ['person' + props.type]: 0,
+              ['company' + props.type]: 0
+            };
+          }
+
+          updateValue () {
+            let updateRate = prefix => {
+              let rate = eval(prefix+'Rate');
+              if(rate.hasOwnProperty(this.props.type)){
+                this.setState({
+                  [prefix + this.props.type]: rate[this.props.type]
+                });
+              }else if(rate.account.hasOwnProperty(this.props.type)){
+                this.setState({
+                  [prefix + this.props.type]: rate.account[this.props.type]
+                });
+              }
+            }
+            ['person', 'company'].forEach(item => {
+              updateRate(item);
+            });
+          }
+
+          formatValue (number=0) {
+            if(number>0) {
+              return (1*number).toFixed(2);
+            }
+
+          }
+
+          getPercent (prefix) {
+            let type = this.props.type;
+            let rated = eval(prefix+'Rate').rated;
+            if(rated.hasOwnProperty(type)){
+              return '（' + (rated[type]*100).toFixed(2) + '%' + '）';
+            }
+          }
+
+          render () {
+            return (
+              <div class="line">
+                <span class="name">{this.props.name}：</span>
+                <span class="person">{this.formatValue(this.state['person' + this.props.type])} {this.getPercent('person')} </span>
+                <span class="company">{this.formatValue(this.state['company' + this.props.type])} {this.getPercent('company')}</span>
+                </div>
+            )
+          }
+        }
+    </script>
+    
+    
+    <script type="text/babel">
+        class Calculator extends React.Component {
+          constructor(props) {
+            super(props);
+
+            this.state = {salary:null, person:{account:{}}, company:{}, month: new Date().getMonth()+1};
+            this.salaryChange = this.salaryChange.bind(this);
+            this.extrahouseChange = this.extrahouseChange.bind(this);
+            this.subAmountChange = this.subAmountChange.bind(this);
+            this.monthChange = this.monthChange.bind(this);
+          }
+
+          monthChange (e) {
+            let month = e.target.value;      
+            this.setState({month});
+            this.updateChild({month});
+          }
+
+          salaryChange (e) {
+            let salary = e.target.value;      
+            this.setState({salary});
+            this.updateChild({salary});
+          }
+
+          extrahouseChange (e) {
+            let extrahouseRate = e.target.value/100;
+            personRate.rated.extrahouse = companyRate.rated.extrahouse = extrahouseRate;
+            this.updateChild();
+          }
+
+          subAmountChange (e) {
+            let subAmount = e.target.value;
+            personRate.subAmount = subAmount;
+            this.updateChild();
+          }
+
+          updateChild ({salary, month} = {}) {
+            if(!salary) {
+              salary = this.state.salary;
+            }
+
+            if(!month){
+              month = this.state.month;
+            }
+
+            calculateAll(salary, month);            
+            this.setState({person: personRate, company: companyRate}); 
+            for(let i in this.refs) {
+               this.refs[i].updateValue();
+            }
+          }
+
+          render() {
+            const list = [
+              {
+                name: '养老保险',
+                type: 'pension'
+              },
+              {
+                name: '医疗保险',
+                type: 'medical'
+              },
+              {
+                name: '失业保险',
+                type: 'unemployment'
+              },
+              {
+                name: '住房公积金',
+                type: 'house'
+              },
+              {
+                name: '补充公积金',
+                type: 'extrahouse'
+              },
+              {
+                name: '每月社保公积金',
+                type: 'total'
+              },
+              {
+                name: '已缴个税总计',
+                type: 'beforeTotalTax'
+              },
+              {
+                name: '应缴个税总计',
+                type: 'totalTax'
+              },
+              {
+                name: '当月个税',
+                type: 'tax'
+              },
+              {
+                name: '税后收入',
+                type: 'afterTax'
+              },
+            ];
+            
+            return (
+              <div>
+                <div>
+                  <span class="name">计算工资月份：</span>
+                  <input type="number" value={this.state.month} min="1" max="12" onChange={this.monthChange} />
+                </div>
+                <div>
+                  <span class="name">税前收入：</span>
+                  <input type="number" min="0" onChange={this.salaryChange} />
+                </div>
+                <div>
+                  <span class="name">补充公积金比率：</span>
+                  <input type="number" min="0" onChange={this.extrahouseChange} />%
+                </div>
+                <div>
+                  <span class="name">每月个税扣除额：</span>
+                  <input type="number" min="0" onChange={this.subAmountChange} />
+                </div>
+                <div><span class="name"></span><span class="person">个人部分</span><span class="company">企业部分</span></div>
+                {list.map(({name, type}, index) => {
+                  return <LineShower name={name} ref={index} type={type} />
+                })}
+              </div>
+            );
+          }
+        }
+
+        const domContainer = document.querySelector('#root');
+        ReactDOM.render(<Calculator />, domContainer);
+    </script>
+
+
+    <script>
+      //计算所有数额
+        function calculateAll (salary, month) {
+          if(!salary) return;
+          let pretax = salary;
+
+          let baseNumber = getBaseNumber(salary);
+          let personTotal = companyTotal = 0;
+
+          for(let i in personRate.rated) {
+            personRate.account[i] = (insbaseRate.actual*personRate.rated[i]).toFixed(2);
+            companyRate.account[i] = (insbaseRate.actual*companyRate.rated[i]).toFixed(2);
+
+            if(i=='house' || i=='extrahouse') {
+              personRate.account[i] = (housebaseRate.actual * personRate.rated[i]).toFixed(2);
+              companyRate.account[i] = (housebaseRate.actual * companyRate.rated[i]).toFixed(2);
+            }
+
+            personTotal += personRate.account[i]*1;
+            companyTotal += companyRate.account[i]*1;
+          }
+
+          personRate.total = personTotal;
+          companyRate.total = companyTotal;
+
+          let afterSS = pretax - personRate.total;
+          personRate.monthTotal = (afterSS - 5000 - personRate.subAmount) * month;
+          personRate.totalTax = caltax5000(personRate.monthTotal);
+
+          if(month>1){
+            personRate.lastTotal = (afterSS - 5000 - personRate.subAmount) * (month - 1);
+            personRate.beforeTotalTax = caltax5000(personRate.lastTotal);
+          }else{
+            personRate.lastTotal = 0;
+            personRate.beforeTotalTax = 0;
+          }
+
+          personRate.tax = personRate.totalTax - personRate.beforeTotalTax;
+          personRate.afterTax = afterSS - personRate.tax;
+          //生成图表
+          var values = [
+            personRate.afterTax,
+            personRate.account['pension'],
+            personRate.account['medical'],
+            personRate.account['unemployment'],
+            personRate.account['house'],
+            personRate.account['extrahouse'],
+            personRate.tax
+          ];
+
+          var companyValues = [
+            salary,
+            companyRate.account['pension'],
+            companyRate.account['medical'],
+            companyRate.account['unemployment'],
+            companyRate.account['injury'],
+            companyRate.account['birth'],
+            companyRate.account['house'],
+            companyRate.account['extrahouse']
+          ];
+
+          return {
+            personRate,
+            companyRate
+          }
+
+        }
+
+        function getBaseNumber(pretax) {
+            if (pretax > insbaseRate.min && pretax < insbaseRate.max)
+              insbaseRate.actual = pretax;
+            else if (pretax > insbaseRate.max)
+              insbaseRate.actual = insbaseRate.max;
+            else if (pretax < insbaseRate.min)
+              insbaseRate.actual = insbaseRate.min;
+
+            if (pretax > housebaseRate.min && pretax < housebaseRate.max)
+              housebaseRate.actual = pretax;
+            else if (pretax > housebaseRate.max)
+              housebaseRate.actual = housebaseRate.max;
+            else if (pretax < housebaseRate.min)
+              housebaseRate.actual = housebaseRate.min;
+        }
+    </script>
+
+
+    <script>
+      var personRate = {
+          account: {
+          },
+          rated: {
+            pension: 0.08,
+            medical: 0.02,
+            unemployment: 0.005,
+            injury: 0,
+            birth: 0,
+            house: 0.07,
+            extrahouse: 0
+          },
+          rate: {
+          },
+          subAmount: 0,
+          total: 0
+        };
+
+      var companyRate = {
+        account: {
+        },
+        rated: {
+          pension: 0.16,
+          medical: 0.095,
+          unemployment: 0.005,
+          injury: 0.002,
+          birth: 0.01,
+          house: 0.07,
+          extrahouse: 0
+        },
+        rate: {
+
+        },
+        total: 0
+      };
+
+      var insbaseRate = {
+        min: 4927,
+        max: 24633,
+        actual: 0
+      };
+      
+      var housebaseRate = {
+        min: 2414,
+        max: 23500,
+        actual: 0
+      };
+    </script>
+
+
+    <script>
+      //个人所得税税率
+        function caltax5000(account) {
+          var taxrate = [
+            {
+              min: 0,
+              max: 36000,
+              rate: 0.03,
+              sub: 0
+            },
+            {
+              min: 36000,
+              max: 144000,
+              rate: 0.1,
+              sub: 2520
+            },
+            {
+              min: 144000,
+              max: 300000,
+              rate: 0.2,
+              sub: 16920
+            },
+            {
+              min: 300000,
+              max: 420000,
+              rate: 0.25,
+              sub: 31920
+            },
+            {
+              min: 420000,
+              max: 660000,
+              rate: 0.3,
+              sub: 52920
+            },
+            {
+              min: 660000,
+              max: 960000,
+              rate: 0.35,
+              sub: 85920
+            },
+            {
+              min: 960000,
+              max: Infinity,
+              rate: 0.45,
+              sub: 181920
+            }
+          ];
+          return doCal(account, taxrate);
+        }
+
+
+        // 计算个人所得税
+        function doCal(account, taxrate) {
+          if (account < 0) return 0;
+          var rateObj = {};
+          for (var i = 0; i < taxrate.length; i++) {
+            if (account > taxrate[i].min && account < taxrate[i].max) {
+              rateObj = taxrate[i];
+              break;
+            }
+          }
+          var tax = account * rateObj.rate - rateObj.sub;
+          return tax;
+        }
+    </script>
+
+
+    <div class="ad-holder-left">
+      <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+      <!-- 对联1 -->
+      <ins class="adsbygoogle" style="display:inline-block;width:120px;height:600px"
+        data-ad-client="ca-pub-4798747605001281" data-ad-slot="4037483459"></ins>
+      <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </div>
+    
+    <div class="ad-holder-right">
+      <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+      <!-- 对联2 -->
+      <ins class="adsbygoogle" style="display:inline-block;width:120px;height:600px"
+        data-ad-client="ca-pub-4798747605001281" data-ad-slot="6990949858"></ins>
+      <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </div>
+    
+
+</body>
+</html>

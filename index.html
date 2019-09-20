@@ -106,6 +106,7 @@
         <div class="header">2019年上海市社保计算器(按起征点5000计算,专项附加扣除)</div>
 
         <div class="others">
+            <a class="btn btn-warning" href="year.html" target="_blank">试试按年计算</a>
 	        <a class="btn btn-primary" href="bj.html" target="_blank">北京社保计算器</a>
             <a class="btn btn-primary" href="others.html" target="_blank">用户查询记录</a>
 	        <a class="btn btn-primary" href="analytics.html" target="_blank">所有查询统计</a>
@@ -330,7 +331,7 @@
         var app=angular.module('myApp',[]);
         app.controller('main', ['$scope', '$http', function($scope, $http){
 
-            $http.get('http://api.dhumedia.cn/count');
+            $http.get('count.php');
             
         	var myChart = echarts.init(document.getElementById('chart'),'vintage');
         	var option = {
@@ -437,7 +438,7 @@
                 account:{
                 },
                 rated:{
-                    pension:0.20,
+                    pension:0.16,
                     medical:0.095,
                     unemployment:0.005,
                     injury:0.002,
@@ -452,13 +453,13 @@
             };
 
             $scope.insbase={
-                min:4279,
-                max:21396,
+                min:4927,
+                max:24633,
                 actual:0
             };
             $scope.housebase={
-                min:2300,
-                max:21400,
+                min:2414,
+                max:23500,
                 actual:0
             };
 
@@ -616,7 +617,7 @@
 
             var getResult = _.debounce(function(){
             	if($scope.pretaxBefore>1000){
-            		$http.post('http://api.dhumedia.cn/calculate', {
+            		$http.post('get.php', {
                         salary : $scope.pretaxBefore,
                         insurancebase : $scope.insbase.actual,
                         housebase : $scope.housebase.actual,

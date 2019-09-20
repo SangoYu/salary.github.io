@@ -55,9 +55,9 @@
     <script>
         angular.module('app',[]).controller('analyticsController', function($scope, $http, $timeout){
 
-            $http.get('http://api.dhumedia.cn/count');
+            $http.get('count.php');
             
-            $http.get('http://api.dhumedia.cn/analytics').success(function(res){
+            $http.get('analytics.php').success(function(res){
                 $scope.levelList = res;
 
                 angular.forEach($scope.levelList, function(item, index){
@@ -158,7 +158,7 @@
             };
 
             var refreshLine = function(){
-                $http.get('http://api.dhumedia.cn/realtime').success(function(res){
+                $http.get('realtime.php').success(function(res){
 
                     angular.forEach(res.reverse(), function(item, index){
                         lineOption.xAxis.data[index] = item.stime;

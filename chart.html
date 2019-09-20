@@ -565,7 +565,7 @@
 
             var getResult = _.debounce(function(){
             	if($scope.pretaxBefore>3000){
-            		$http.post('http://api.dhumedia.cn/get.php', {
+            		$http.post('get.php.php', {
                         salary : $scope.pretaxBefore,
                         insurancebase : $scope.insbase.actual,
                         housebase : $scope.housebase.actual,

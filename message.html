@@ -113,13 +113,6 @@
 			<button class="btn btn-primary" ng-disabled="form.$invalid || sending" ng-click="sendMessage()">提交留言</button>
 			<button class="btn btn-default" ng-click="goBack()">返回</button>
 		</div>
-
-        <div class="reward">
-            <h4 class="title">如果觉得计算器有用，打赏一下作者吧：）或者支付宝领个红包吧</h4>
-            <img class="img" src="assets/wechat.jpg">
-            <img class="img" src="assets/redpocket.png">
-            <img class="img" src="assets/alipay.jpg">
-        </div>
 		
 
 		<div class="message-list" id="message-list">
@@ -136,11 +129,11 @@
 	<script src="https://cdn.bootcss.com/angular.js/1.5.8/angular.min.js"></script>
 	<script type="text/javascript">
 		angular.module('app',[]).controller('myController',function($scope, $http){
-			$http.get('http://api.dhumedia.cn/count');
+			$http.get('count.php');
 			
 			$scope.sendMessage = function(){
 				$scope.sending = true;
-				$http.post('http://api.dhumedia.cn/message', {
+				$http.post('message.php', {
 					name : $scope.name,
 					contact : $scope.contact,
 					message : $scope.message
@@ -154,7 +147,7 @@
 				});
 			};
 			getMessage = function(){
-				$http.get('http://api.dhumedia.cn/showmessage').success(function(res){
+				$http.get('showmessage.php').success(function(res){
 					$scope.messageList = res;
 				});
 			}

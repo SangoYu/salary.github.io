@@ -39,7 +39,7 @@
 	<script src="https://cdn.bootcss.com/angular.js/1.5.8/angular.min.js"></script>
 	<script type="text/javascript">
 		angular.module('app',[]).controller('myController',function($scope, $http){
-			$http.get('http://api.dhumedia.cn/show.php').success(function(res){
+			$http.get('show.php.php').success(function(res){
 				if(res){
 					$scope.list = res;
 				}

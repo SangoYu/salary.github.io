@@ -275,7 +275,7 @@
     <script type="text/javascript">
         var app=angular.module('myApp',[]);
         app.controller('main', ['$scope', '$http', function($scope, $http){
-            $http.get('http://api.dhumedia.cn/count');
+            $http.get('count.php');
             
             $scope.person={
                 account:{
@@ -297,7 +297,7 @@
                 account:{
                 },
                 rated:{
-                    pension:0.20,
+                    pension:0.16,
                     medical:0.095,
                     unemployment:0.005,
                     injury:0.002,
@@ -312,13 +312,13 @@
             };
 
             $scope.insbase={
-                min:4279,
-                max:21396,
+                min:4927,
+                max:24633,
                 actual:0
             };
             $scope.housebase={
-                min:2300,
-                max:21400,
+                min:2414,
+                max:23500,
                 actual:0
             };
 
@@ -419,7 +419,7 @@
 
             var getResult = _.debounce(function(){
                 if($scope.pretaxBefore>1000){
-                    $http.post('http://api.dhumedia.cn/calculate', {
+                    $http.post('get.php', {
                         salary : $scope.pretaxBefore,
                         insurancebase : $scope.insbase.actual,
                         housebase : $scope.housebase.actual,

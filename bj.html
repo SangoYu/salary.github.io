@@ -315,7 +315,7 @@
         var app=angular.module('myApp',[]);
         app.controller('main', ['$scope', '$http', function($scope, $http){
 
-            $http.get('http://api.dhumedia.cn/count');
+            $http.get('count.php');
             
         	var myChart = echarts.init(document.getElementById('chart'),'vintage');
         	var option = {
@@ -601,7 +601,7 @@
 
             var getResult = _.debounce(function(){
             	if($scope.pretaxBefore>1000){
-            		$http.post('http://api.dhumedia.cn/calculate', {
+            		$http.post('get.php', {
                         salary : $scope.pretaxBefore,
                         insurancebase : $scope.insbase.actual,
                         housebase : $scope.housebase.actual,
