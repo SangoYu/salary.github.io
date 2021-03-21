@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>年终奖计算器</title>
+    <meta name="keywords" content="年终奖计算">
+    <meta name="description" content="年终奖计算">
+    <meta charset="utf-8">
+    <link href="https://cdn.bootcss.com/twitter-bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/style.css">
+
+    <style>
+        body {
+            line-height: 25px;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        input {
+            height: 25px;
+            margin: 5px;
+        }
+    </style>
+
+    <script>
+        var _hmt = _hmt || [];
+        (function () {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?15d4057c870ef9886575a5e71a308efa";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+    
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-80895780-1', 'auto');
+        ga('send', 'pageview');
+
+    </script>
+</head>
+
+<body>
+    <h2>年终奖计算器</h2>
+
+    <div class="ad-holder-center">
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <!-- 横幅 -->
+        <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px"
+            data-ad-client="ca-pub-4798747605001281" data-ad-slot="2560750255"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+
+    <div class="others">
+        <a class="btn btn-primary" href="/">按月计算</a>
+        <a class="btn btn-primary" href="year.html" target="_blank">试试按年计算</a>
+        <a class="btn btn-primary" href="bonus.html" target="_blank">年终奖计算</a>
+        <a class="btn btn-primary" href="others.html" target="_blank">用户查询记录</a>
+        <a class="btn btn-primary" href="analytics.html" target="_blank">所有查询统计</a>
+        <a class="btn btn-primary" href="message.html" target="_blank">留言板</a>
+    </div>
+    <div id="root">
+        <div id="before">
+            <div class="name">税前年终奖</div>
+            <input id="bonus" type="number" min="0" onkeyup="calculate(event)">
+        </div>
+        <div class="line">
+            <div class="name">税率</div>
+            <span id="rate"></span>
+        </div>
+        <div class="line">
+            <div class="name">税额</div>
+            <span id="tax"></span>
+        </div>
+        <div class="line">
+            <div class="name">完税收入</div>
+            <span id="after"></span>
+        </div>
+    </div>
+
+    <hr>
+
+    <section class="article-section">
+        <article class="article-item">
+            <div class="article-metas clearfix">
+                <div class="metas-body">
+                    <h3 class="title">年终奖所得</h3>
+                </div>
+            </div>
+            <div class="media">
+                <div class="media-body">
+                    <p class="pBold">一、征收范围</p>
+                    <p>根据《国家税务总局关于调整个人取得全年一次性奖金等计算征收个人所得税方法问题的通知》（国税发[2005]9号）文件的规定，纳税人取得全年一次性奖金，单独作为一个月工资、薪金所得计算纳税，由扣缴义务人发放时代扣代缴。
+                    </p>
+                    <p>年终奖所得</p>
+                    <p>年终奖所得，将年终奖金额除以12个月，以每月平均收入金额来确定税率和速算扣除数，年终奖所得税率表与工资、薪金所得的税率表相同，只是他们的计 算方式不同。</p>
+                    <table cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>级数</th>
+                                <th>平均每月收入</th>
+                                <th>税率(%)</th>
+                                <th>速算扣除数</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="jishu">1</td>
+                                <td class="shuiYes">不超过3,000元的部分</td>
+                                <td class="taxRate">3</td>
+                                <td class="kcsText">0</td>
+                            </tr>
+                            <tr>
+                                <td class="jishu">2</td>
+                                <td class="shuiYes">超过3,000元至12,000元的部分</td>
+                                <td class="taxRate">10</td>
+                                <td class="kcsText">210</td>
+                            </tr>
+                            <tr>
+                                <td class="jishu">3</td>
+                                <td class="shuiYes">超过12,000元至25,000元的部分</td>
+                                <td class="taxRate">20</td>
+                                <td class="kcsText">1410</td>
+                            </tr>
+                            <tr>
+                                <td class="jishu">4</td>
+                                <td class="shuiYes">超过25,000元至35,000元的部分</td>
+                                <td class="taxRate">25</td>
+                                <td class="kcsText">2660</td>
+                            </tr>
+                            <tr>
+                                <td class="jishu">5</td>
+                                <td class="shuiYes">超过35,000元至55,000元的部分</td>
+                                <td class="taxRate">30</td>
+                                <td class="kcsText">4410</td>
+                            </tr>
+                            <tr>
+                                <td class="jishu">6</td>
+                                <td class="shuiYes">超过55,000元至80,000元的部分</td>
+                                <td class="taxRate">35</td>
+                                <td class="kcsText">7160</td>
+                            </tr>
+                            <tr>
+                                <td class="jishu">7</td>
+                                <td class="shuiYes">超过80,000元的部分</td>
+                                <td class="taxRate">45</td>
+                                <td class="kcsText">15160</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p>说明：</p>
+                    <p>1、本表平均每月收入为年终奖所得金额除以12个月后的平均值。</p>
+                    <p>2、税率表与工资、薪金所得税率表相同。</p>
+                    <br>
+                    <p class="pBold">二、税率</p>
+                    <p class="pBold">三、应纳税所得额及应纳税额的计算</p>
+                    <p>（一）先将雇员当月内取得的全年一次性奖金，除以12个月，按其商数确定适用税率和速算扣除数。如果在发放年终一次性奖金的当月，雇员当月工资薪金所得低于税法规定的费用扣除额，应将全年一次性奖金减除"雇员当月工资薪金所得与费用扣除额的差额"后的余额，按上述办法确定全年一次性奖金的适用税率和速算扣除数。
+                    </p>
+                    <p>（二）将雇员个人当月内取得的全年一次性奖金，按上述确定的适用税率和速算扣除数计算征税，计算公式如下：</p>
+                    <p>1、如果雇员当月工资薪金所得高于（或等于）税法规定的费用扣除额的，适用公式为：</p>
+                    <p>应纳税额=雇员当月取得全年一次性奖金×适用税率-速算扣除数</p>
+                    <p>2、如果雇员当月工资薪金所得低于税法规定的费用扣除额的，适用公式为：</p>
+                    <p>应纳税额=(雇员当月取得全年一次性奖金-雇员当月工资薪金所得与费用扣除额的差额)×适用税率-速算扣除数</p>
+                    <p>在一个纳税年度内，对每一个纳税人，该计税办法只允许采用一次。</p>
+                </div>
+            </div>
+        </article>
+    </section>
+
+    <script>
+
+        calculate();
+
+
+        function calculate(e) {
+            var beforeTax
+            if (e) {
+                beforeTax = e.target.valueAsNumber;
+            } else {
+                beforeTax = 0;
+            }
+            var rateObj = caltax(beforeTax / 12);
+            var tax = beforeTax * rateObj.rate - rateObj.sub;
+            var afterTax = beforeTax - tax;
+            document.querySelector("#rate").innerText = (rateObj.rate * 100 || 0) + '%';
+            document.querySelector("#tax").innerText = (tax || 0).toFixed(2);
+            document.querySelector("#after").innerText = (afterTax || 0).toFixed(2);
+        }
+
+        //个人所得税税率
+        function caltax(account) {
+            var taxrate = [
+                {
+                    min: 0,
+                    max: 3000,
+                    rate: 0.03,
+                    sub: 0
+                },
+                {
+                    min: 3000,
+                    max: 12000,
+                    rate: 0.1,
+                    sub: 210
+                },
+                {
+                    min: 12000,
+                    max: 25000,
+                    rate: 0.2,
+                    sub: 1410
+                },
+                {
+                    min: 25000,
+                    max: 35000,
+                    rate: 0.25,
+                    sub: 2660
+                },
+                {
+                    min: 35000,
+                    max: 55000,
+                    rate: 0.3,
+                    sub: 4410
+                },
+                {
+                    min: 55000,
+                    max: 80000,
+                    rate: 0.35,
+                    sub: 7160
+                },
+                {
+                    min: 80000,
+                    max: Math.pow(2, 53),
+                    rate: 0.45,
+                    sub: 15160
+                }
+            ];
+            return getRateObj(account, taxrate);
+        }
+
+
+        // 计算个人所得税
+        function getRateObj(account, taxrate) {
+            if (account < 0) return 0;
+            var rateObj = {};
+            for (var i = 0; i < taxrate.length; i++) {
+                if (account > taxrate[i].min && account <= taxrate[i].max) {
+                    rateObj = taxrate[i];
+                    break;
+                }
+            }
+
+            return rateObj;
+        }
+    </script>
+
+    <div class="ad-holder-left">
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!-- 对联1 -->
+    <ins class="adsbygoogle" style="display:inline-block;width:120px;height:600px"
+        data-ad-client="ca-pub-4798747605001281" data-ad-slot="4037483459"></ins>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</div>
+
+<div class="ad-holder-right">
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!-- 对联2 -->
+    <ins class="adsbygoogle" style="display:inline-block;width:120px;height:600px"
+        data-ad-client="ca-pub-4798747605001281" data-ad-slot="6990949858"></ins>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</div>
+
+</body>
+
+</html>

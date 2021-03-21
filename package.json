@@ -1,0 +1,35 @@
+{
+  "name": "salary",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "pm2 restart app.js",
+    "prestart": "npm install --only=production",
+    "build": "rm -rf dist && babel src -d ./dist --ignore static && cp -r src/static dist/",
+    "debug": "nodemon src/app"
+  },
+  "author": "sango.yu",
+  "license": "MIT",
+  "dependencies": {
+    "koa": "^2.3.0",
+    "koa-body": "^2.5.0",
+    "koa-convert": "^1.2.0",
+    "koa-cors": "0.0.16",
+    "koa-router": "^7.2.1",
+    "koa-static": "^4.0.1",
+    "moment": "^2.19.1",
+    "mysql": "^2.15.0",
+    "mysql2": "^1.4.2",
+    "request": "^2.83.0",
+    "sequelize": "^3.35.1"
+  },
+  "devDependencies": {
+    "babel": "^6.23.0",
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-stage-0": "^6.24.1",
+    "chai": "^4.1.2",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-runtime": "^6.26.0"
+  }
+}

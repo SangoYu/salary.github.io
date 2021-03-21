@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>count TEST</title>
+    <script src="../assets/angular.min.js"></script>
+</head>
+<body ng-app="app">
+    <div ng-controller="testController"></div>
+    <script>
+        angular.module('app',[]).controller('testController', function($http) {
+            $http.get('count');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>留言板</title>
+	<meta charset="utf-8">
+	<link href="https://cdn.bootcss.com/twitter-bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="assets/style.css">
+	<style>
+		body{
+            font-family: 'Microsoft Yahei';
+        }
+	
+		.container{
+			width: 900px;
+			margin: 0 auto;
+		}
+
+		.text-danger{
+			color: #F00;
+		}
+
+		.text-center{
+			text-align: center;
+		}
+
+		.ng-touched.ng-invalid{
+			border: 1px solid #F00
+		}
+
+		.message-list{
+			margin-top: 50px;
+			border: 1px solid #CCC;
+			padding: 20px 30px;
+			border-radius: 10px;
+		}
+
+		.message-item:not(:last-child){
+			border-bottom: 1px solid #CCC;
+		}
+
+		.message-item p{
+			word-break: break-all;
+		}
+
+
+	</style>
+	
+	<script>
+    var _hmt = _hmt || [];
+	(function() {
+		var hm = document.createElement("script");
+		hm.src = "//hm.baidu.com/hm.js?15d4057c870ef9886575a5e71a308efa";
+		var s = document.getElementsByTagName("script")[0]; 
+		s.parentNode.insertBefore(hm, s);
+	})();
+    </script>
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-80895780-1', 'auto');
+      ga('send', 'pageview');
+    </script>
+
+</head>
+<body ng-app='app'>
+
+	<div ng-controller="myController" class="container">
+		<h2 class="text-center">留言板</h2>
+        <div class="ad-holder-center">
+    		<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <!-- 横幅 -->
+            <ins class="adsbygoogle"
+                 style="display:inline-block;width:728px;height:90px"
+                 data-ad-client="ca-pub-4798747605001281"
+                 data-ad-slot="2560750255"></ins>
+            <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+		
+		<div ng-include="'./nav.html'"></div>
+
+
+
+		<form class="form" name="form">
+			<div class="form-group">
+				<label >
+					<span class="text-danger">*</span>网名(必填，最多20个字符)：
+				</label>
+				<div class="value">
+					<input type="text" class="form-control" ng-maxlength="20" required
+					ng-model="name"></textarea>
+				</div>
+			</div>
+			<div class="form-group">
+				<label >联系方式(选填，最多40个字符，不会出现在留言列表里)：</label>
+				<div class="value">
+					<input type="text" class="form-control" ng-maxlength="40"
+					ng-model="contact"></textarea>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="value">
+					<span class="text-danger">*</span>留言(必填，最多200个字符)：
+				</label>
+				<textarea class="form-control" required ng-maxlength="200"
+				ng-model="message"></textarea>
+			</div>
+		</form>
+	
+		<div class="text-center">
+			<button class="btn btn-primary" ng-disabled="form.$invalid || sending" ng-click="sendMessage()">提交留言</button>
+			<button class="btn btn-default" ng-click="goBack()">返回</button>
+		</div>
+		
+
+		<div class="message-list" id="message-list">
+			<h4 class="text-center">留言汇总</h4>
+			<div class="form-group message-item" ng-repeat="item in messageList">
+				<p>{{item.name}} 在 {{item.time | date: 'yyyy-MM-dd HH:mm:ss'}} 写道：</p>
+				<p class="text-info">{{item.message}}</p>
+			</div>
+		</div>
+		
+
+	</div>
+	<script src="https://cdn.bootcss.com/jquery/1.6.4/jquery.min.js"></script>
+	<script src="https://cdn.bootcss.com/angular.js/1.5.8/angular.min.js"></script>
+	<script type="text/javascript">
+		angular.module('app',[]).controller('myController',function($scope, $http){
+			$http.get('count');
+			
+			$scope.sendMessage = function(){
+				$scope.sending = true;
+				$http.post('message', {
+					name : $scope.name,
+					contact : $scope.contact,
+					message : $scope.message
+				}).success(function(){
+					getMessage();
+					$scope.sending = false;
+					$scope.name = null;
+					$scope.contact = null;
+					$scope.message = null;
+					location.href="#message-list";
+				});
+			};
+			getMessage = function(){
+				$http.get('showmessage').success(function(res){
+					$scope.messageList = res;
+				});
+			}
+			getMessage();
+
+			$scope.goBack = function(){
+				location.href = "/";
+			};
+
+		});
+	</script>
+
+	<div class="ad-holder-left">
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!-- 对联1 -->
+    <ins class="adsbygoogle" style="display:inline-block;width:120px;height:600px"
+        data-ad-client="ca-pub-4798747605001281" data-ad-slot="4037483459"></ins>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</div>
+
+<div class="ad-holder-right">
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!-- 对联2 -->
+    <ins class="adsbygoogle" style="display:inline-block;width:120px;height:600px"
+        data-ad-client="ca-pub-4798747605001281" data-ad-slot="6990949858"></ins>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</div>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Show Data</title>
+	<meta charset="utf-8">
+	<link href="https://cdn.bootcss.com/twitter-bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body ng-app='app'>
+	<div ng-controller="myController">
+	<div style="text-align: center">今日一共<span ng-bind="list.length"></span>条数据</div>
+		<table class="table table-bordered table-hover table-striped">
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>Ip</th>
+					<th>Time</th>
+					<th>Salary</th>
+					<th>InsuranceBase</th>
+					<th>HouseBase</th>
+					<th>AfterTax</th>
+					<th>City</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="item in list">
+					<td ng-bind="item.id"></td>
+					<td ng-bind="item.ip"></td>
+					<td ng-bind="item.time"></td>
+					<td ng-bind="item.salary | number:2"></td>
+					<td ng-bind="item.insurancebase | number:2"></td>
+					<td ng-bind="item.housebase | number:2"></td>
+					<td ng-bind="item.aftertax | number:2"></td>
+					<td ng-bind="item.city"></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<script src="https://cdn.bootcss.com/jquery/1.6.4/jquery.min.js"></script>
+	<script src="https://cdn.bootcss.com/angular.js/1.5.8/angular.min.js"></script>
+	<script type="text/javascript">
+		angular.module('app',[]).controller('myController',function($scope, $http){
+			$http.get('show.php').success(function(res){
+				if(res){
+					$scope.list = res;
+				}
+			});
+		});
+	</script>
+</body>
+</html>

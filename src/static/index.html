@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>2021社保计算器</title>
+    <meta charset="utf-8">
+    <meta name="keywords" content="上海,北京,广州,深圳,社保计算,社保计算器,2021上海社保计算器,2021北京社保计算器,工资计算器,五险一金计算,上海市五险一金,上海市社保,税后工资计算,上海市工资计算,个人所得税计算,专项附加扣除,年终奖计算">
+    <meta name="description" content="上海社保计算器,北京社保计算器,广州社保计算器,深圳社保计算器,2021上海社保计算器,工资计算,工资计算器,社保计算,社保计算器,五险一金计算,五险一金计算器,上海市五险一金,上海市社保,税后工资计算,税后工资计算器,上海市工资计算,个人所得税计算,税后收入,税后收入计算,上海市税后收入计算,上海市税后收入计算器,年终奖计算">
+    <link href="https://cdn.bootcss.com/twitter-bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/style.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/jquery/1.6.4/jquery.min.js"></script>
+
+    <script>
+    var _hmt = _hmt || [];
+    (function() {
+        var hm = document.createElement("script");
+        hm.src = "//hm.baidu.com/hm.js?15d4057c870ef9886575a5e71a308efa";
+        var s = document.getElementsByTagName("script")[0]; 
+        s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-80895780-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+
+    <script>
+		function IsPC() {
+		    var userAgentInfo = navigator.userAgent;
+		    var Agents = ["Android", "iPhone",
+		                "SymbianOS", "Windows Phone",
+		                "iPad", "iPod"];
+		    var flag = true;
+		    for (var v = 0; v < Agents.length; v++) {
+		        if (userAgentInfo.indexOf(Agents[v]) > 0) {
+		            flag = false;
+		            break;
+		        }
+		    }
+		    return flag;
+		}
+		if(IsPC()){
+
+		}else{
+			location.href="mobile.html";
+		}
+	</script>
+</head>
+<body>
+
+<div class="col-sm-12">
+    <div ng-controller="main" class="sm-container">
+        <div class="header">2021年{{selectedRegion.name}}市社保计算器</div>
+
+        <div class="ad-holder-center">
+            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <!-- 横幅 -->
+            <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px"
+                data-ad-client="ca-pub-4798747605001281" data-ad-slot="2560750255"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div ng-include="'./nav.html'"></div>
+
+
+        <div class="input-group pretax-group">
+            <span class="input-group-addon">税前工资：</span>
+            <span class="input-group-addon">￥</span>
+            <input type="number" min="0" class="form-control" ng-model="pretaxBefore" ng-change="calculateAll()" placeholder="请输入税前月薪">
+            <span class="input-group-addon danger">元</span>
+
+            <span class="input-group-addon">公积金缴纳比例：</span>
+            <input ng-init="houseRate=7" type="number" class="form-control" ng-model="houseRate" ng-change="changeHouseRate()">
+            <span class="input-group-addon">%</span>
+        </div>
+        <div class="input-group pretax-group">
+            <!-- <span class="input-group-addon">自定义基数和缴费比例：</span>
+            <span class="input-group-addon">
+                <input type="checkbox" ng-model="customRate" ng-change="changeCustomRate()">
+                {{customRate ? "是" : "否"}}
+            </span> -->
+            <span class="input-group-addon">社保基数：</span>
+            <input type="number" min="0" class="form-control" ng-model="insbase.actual"
+             ng-change="calculateAll()">
+            <span class="input-group-addon">公积金基数：</span>
+            <input type="number" min="0" class="form-control" ng-model="housebase.actual"
+             ng-change="calculateAll()">
+
+        </div>
+        <div class="input-group pretax-group">
+            <span class="input-group-addon">专项附加扣除：</span>
+            <input type="number" min="0" class="form-control" ng-model="subAmount"  ng-change="calculateAll()">
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                        <th></th>
+                        <th colspan="2" width="30%">个人缴纳</th>
+                        <th colspan="2" width="30%">单位缴纳</th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div>
+                                养老保险
+                            </div>
+                            <div>可自定义缴纳比例</div>
+                        </td>
+                        <td colspan="2">
+                            <span ng-bind="person.account.pension | number : 2"></span>
+                            <span ng-bind="person.rated.pension | percent"></span>
+                            <div>
+                                <input type="number" ng-change="calculateAll()" ng-model="person.rated.pension">
+                            </div>
+                        </td>
+                        <td colspan="2">
+                            <span ng-bind="company.account.pension | number : 2"></span>
+                            <span ng-bind="company.rated.pension | percent"></span>
+                            <div>
+                                <input type="number" ng-change="calculateAll()" ng-model="company.rated.pension">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div>
+                                医疗保险
+                            </div>
+                            <div>可自定义缴纳比例</div>
+                        </td>
+                        <td colspan="2">
+                            <span ng-bind="person.account.medical | number : 2"></span>
+                            <span ng-bind="person.rated.medical | percent"></span>
+                            <div>
+                                <input type="number" ng-change="calculateAll()" ng-model="person.rated.medical">
+                            </div>
+                        </td>
+                        <td colspan="2">
+                            <span ng-bind="company.account.medical | number : 2"></span>
+                            <span ng-bind="company.rated.medical | percent"></span>
+                            <div>
+                                <input type="number" ng-change="calculateAll()" ng-model="company.rated.medical">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div>
+                                失业保险
+                            </div>
+                            <div>可自定义缴纳比例</div>
+                        </td>
+                        <td colspan="2">
+                            <span ng-bind="person.account.unemployment | number : 2"></span>
+                            <span ng-bind="person.rated.unemployment | percent"></span>
+                            <div>
+                                <input type="number" ng-change="calculateAll()" ng-model="person.rated.unemployment">
+                            </div>
+                        </td>
+                        <td colspan="2">
+                            <span ng-bind="company.account.unemployment | number : 2"></span>
+                            <span ng-bind="company.rated.unemployment | percent"></span>
+                            <div>
+                                <input type="number" ng-change="calculateAll()" ng-model="company.rated.unemployment">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div>
+                                工伤保险
+                            </div>
+                            <div>可自定义缴纳比例</div>
+                        </td>
+                        <td colspan="2">
+                            <span>-</span>
+                        </td>
+                        <td colspan="2">
+                            <span ng-bind="company.account.injury | number : 2"></span>
+                            <span ng-bind="company.rated.injury | percent"></span>
+                            <div>
+                                <input type="number" ng-change="calculateAll()" ng-model="company.rated.injury">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div>
+                                生育保险
+                            </div>
+                            <div>可自定义缴纳比例</div>
+                        </td>
+                        <td colspan="2">
+                            <span>-</span>
+                        </td>
+                        <td colspan="2">
+                            <span ng-bind="company.account.birth | number : 2"></span>
+                            <span ng-bind="company.rated.birth | percent"></span>
+                            <div>
+                                <input type="number" ng-change="calculateAll()" ng-model="company.rated.birth">
+
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>基本住房公积金
+                            <div>可自定义缴纳比例</div>
+                        </td>
+                        <td colspan="2">
+                            <span ng-bind="person.account.house | number : 2"></span>
+                            <span ng-bind="person.rated.house | percent"></span>
+                            <div>
+                                <input type="number" ng-change="calculateAll()" ng-model="person.rated.house">
+                            </div>
+                        </td>
+                        <td colspan="2">
+                            <span ng-bind="company.account.house | number : 2"></span>
+                            <span ng-bind="company.rated.house | percent"></span>
+                            <div>
+                                <input type="number" ng-change="calculateAll()" ng-model="company.rated.house">
+
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>补充住房公积金
+                            <div>可自定义缴纳比例</div>
+                        </td>
+                        <td colspan="2">
+                            <span ng-bind="person.account.extrahouse | number : 2"></span>
+                            <span ng-bind="company.rated.extrahouse | percent"></span>
+                        </td>
+                        <td colspan="2">
+                            <span ng-bind="company.account.extrahouse | number : 2"></span>
+                            <span ng-bind="company.rated.extrahouse | percent"></span>
+                            <div>
+                                <input type="number" ng-change="calculateAll()" ng-model="company.rated.extrahouse">
+
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>共计</td>
+                        <td colspan="2">
+                            <span ng-bind="person.total | number:2"></span>
+                        </td>
+                        <td colspan="2">
+                            <span ng-bind="company.total | number:2"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>扣除社保公积金月薪</td>
+                        <td colspan="2">
+                            <span ng-bind="person.after | number:2"></span>
+                        </td>
+                        <td colspan="2"></td>
+                    </tr>
+                    <tr>
+                        <td>个税</td>
+                        <td colspan="2">
+                            <span ng-bind="tax5000 | number:2"></span>
+                        </td>
+                        <td colspan="2"></td>
+                    </tr>                   
+                    <tr>
+                        <td>税后收入</td>
+                        <td colspan="2">
+                            <span ng-bind="aftertax5000 | number:2"></span>
+                        </td>
+                        <td colspan="2"></td>
+                    </tr>
+                    <tr>
+                        <td>专项扣除后个税</td>
+                        <td colspan="2">
+                            <span ng-bind="tax | number:2"></span>
+                        </td>
+                        <td colspan="2"></td>
+                    </tr>
+                    <tr>
+                        <td>专项扣除后收入</td>
+                        <td colspan="2">
+                            <span ng-bind="aftertax | number:2"></span>
+                        </td>
+                        <td colspan="2"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="clearfix"></div>
+<div class="sm-container">
+    <div>
+        <div id="chart" class="pull-left" style="width: 900px; height: 250px"></div>
+    </div>
+    <div>
+        <div id="companyChart" class="pull-left" style="width: 900px; height: 250px"></div>
+    </div>
+</div>
+
+	<script src="https://cdn.bootcss.com/underscore.js/1.8.3/underscore-min.js"></script>
+    <script src="https://cdn.bootcss.com/angular.js/1.5.8/angular.min.js"></script>
+    <script src="https://cdn.bootcss.com/echarts/3.3.0/echarts.min.js"></script>
+    <script src="assets/vintage.js"></script>
+
+    <script src="./main.js"></script>
+    
+    <div class="ad-holder-left">
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <!-- 对联1 -->
+        <ins class="adsbygoogle" style="display:inline-block;width:120px;height:600px"
+            data-ad-client="ca-pub-4798747605001281" data-ad-slot="4037483459"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+
+    <div class="ad-holder-right">
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <!-- 对联2 -->
+        <ins class="adsbygoogle" style="display:inline-block;width:120px;height:600px"
+            data-ad-client="ca-pub-4798747605001281" data-ad-slot="6990949858"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,12 @@
+<div class="others">
+    <a class="btn btn-primary" href="/">按月计算</a>
+    <a class="btn btn-primary" href="year.html" target="_blank">试试按年计算</a>
+    <a class="btn btn-primary" href="bonus.html" target="_blank">年终奖计算</a>
+    <a class="btn btn-primary" href="others.html" target="_blank">用户查询记录</a>
+    <a class="btn btn-primary" href="analytics.html" target="_blank">所有查询统计</a>
+    <a class="btn btn-primary" href="message.html" target="_blank">留言板</a>
+</div>
+
+<div class="region">
+    <a class="btn btn-default" ng-class="{'btn-primary':item.id==selectedRegion.id}" ng-disabled="item.id==selectedRegion.id" ng-repeat="item in regionList" ng-bind="item.name" ng-click="selectRegion(item)"></a>
+</div>
