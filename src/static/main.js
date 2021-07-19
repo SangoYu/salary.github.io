@@ -180,9 +180,9 @@ app.controller('main', ['$scope', '$http', function ($scope, $http) {
         if (pretax > Math.pow(2, 53)) return;
         $scope.person.total = $scope.company.total = 0;
 
-        // if (!$scope.customRate) {
-        //     getBaseNumber();
-        // }
+        if (!$scope.customRate) {
+            getBaseNumber();
+        }
 
         angular.forEach($scope.person.rated, function (value, i) {
 
