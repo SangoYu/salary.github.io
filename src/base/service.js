@@ -23,7 +23,7 @@ Service.getRegionList = async function () {
 }
 
 Service.analytics = async function() {
-    let sql = `select salary, count, concat(cast( format((count/(select count(*) from salary))*100, 2) as char),'%') as rate from
+    let sql = `select salary, count, concat(cast( format((count/(select count(*) from salary where DATE_SUB(CURDATE(), INTERVAL 30 DAY) <= time))*100, 2) as char),'%') as rate from
           (select salary, count(*) as count from (
           select
           case
@@ -37,8 +37,8 @@ Service.analytics = async function() {
                  when salary > 50000 and salary <=100000 then '50K-100K'
                  else '其他'
           end
-          as salary from salary)a
-          group by salary)b;`;
+          as salary from salary where DATE_SUB(CURDATE(), INTERVAL 30 DAY) <= time)a
+          group by salary)b`;
 
     
     return sequelize.query(sql, {model: SalaryInfo});
