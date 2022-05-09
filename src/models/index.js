@@ -14,6 +14,7 @@ let sequelize = new Sequelize(dbConfig.database, dbConfig.user, dbConfig.passwor
         min : 0,
         idle : 10000
     },
+    logging: false,
     define: {
         underscored: true
     },
