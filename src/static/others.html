@@ -3,7 +3,7 @@
 <head>
     <title>计算记录</title>
     <meta charset="utf-8">
-    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/bootstrap.min.css" rel="stylesheet">
     <link href="assets/style.css" rel="stylesheet">
 </head>
 <body ng-app='app' class="sm-container">
@@ -39,8 +39,8 @@
     </div>
 
 
-    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
-    <script src="https://cdn.bootcdn.net/ajax/libs/angular.js/1.5.8/angular.min.js"></script>
+    <script src="assets/jquery.min.js"></script>
+    <script src="assets/angular.min.js"></script>
     <script type="text/javascript">
         angular.module('app',[]).controller('myController',function($scope, $http){
             $http.get('count');
