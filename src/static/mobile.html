@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>2022上海社保计算器(按起征点5000计算,专项附加扣除)</title>
+    <title>2022社保计算器</title>
     <meta charset="utf-8">
     <meta name="keywords" content="上海,社保计算,社保计算器,2022上海社保计算器,工资计算器,五险一金计算,上海市五险一金,上海市社保,税后工资计算,上海市工资计算,个人所得税计算">
     <meta name="description" content="上海社保计算器,2022上海社保计算器,工资计算,工资计算器,社保计算,社保计算器,五险一金计算,五险一金计算器,上海市五险一金,上海市社保,税后工资计算,税后工资计算器,上海市工资计算,个人所得税计算,税后收入,税后收入计算,上海市税后收入计算,上海市税后收入计算器">
@@ -24,6 +24,10 @@
         input[type='checkbox']{
             width: 1em;
             height: 1em;
+        }
+        .region .btn {
+            font-size: 1em;
+            margin: 0.5em;  
         }
     </style>
     <script>
@@ -56,8 +60,13 @@
 <div class="col-xs-12">
 <div class="row">
     <div ng-controller="main" class="container">
-        <!-- <div class="header">2022年上海市</div>
-        <div class="header">社保计算器</div> -->
+        <div class="header">2022年{{selectedRegion.name}}市社保计算器</div>
+
+        <div class="region">
+            <a class="btn btn-default" ng-class="{'btn-primary':item.id==selectedRegion.id}"
+                ng-disabled="item.id==selectedRegion.id" ng-repeat="item in regionList" ng-bind="item.name"
+                ng-click="selectRegion(item)"></a>
+        </div>
 
         <div class="table-response">
             <table class="table table-border">
@@ -245,6 +254,45 @@
         var app=angular.module('myApp',[]);
         app.controller('main', ['$scope', '$http', function($scope, $http){
             $http.get('count');
+
+            $http.get('region').then(function (res) {
+                $scope.regionList = res.data;
+
+                $scope.selectRegion($scope.regionList[0]);
+            });
+
+
+            $scope.selectRegion = function (region) {
+                $scope.selectedRegion = region;
+                $scope.person.rated = region.personalRate;
+                $scope.company.rated = region.companyRate;
+                $scope.insbase = region.insuranceBase;
+                $scope.housebase = region.houseBase;
+
+                $scope.houseRate = parseInt(region.personalRate.house * 100);
+
+                getBaseNumber();
+
+                $scope.calculateAll();
+            }
+
+
+            //更改工资时获取基数
+            function getBaseNumber() {
+                if ($scope.pretax > $scope.insbase.min && $scope.pretax < $scope.insbase.max)
+                    $scope.insbase.actual = $scope.pretax;
+                else if ($scope.pretax >= $scope.insbase.max)
+                    $scope.insbase.actual = $scope.insbase.max;
+                else if ($scope.pretax < $scope.insbase.min)
+                    $scope.insbase.actual = $scope.insbase.min;
+
+                if ($scope.pretax > $scope.housebase.min && $scope.pretax < $scope.housebase.max)
+                    $scope.housebase.actual = $scope.pretax;
+                else if ($scope.pretax >= $scope.housebase.max)
+                    $scope.housebase.actual = $scope.housebase.max;
+                else if ($scope.pretax < $scope.housebase.min)
+                    $scope.housebase.actual = $scope.housebase.min;
+            }
             
             $scope.person={
                 account:{
@@ -392,7 +440,8 @@
                         salary : $scope.pretaxBefore,
                         insurancebase : $scope.insbase.actual,
                         housebase : $scope.housebase.actual,
-                        aftertax : $scope.aftertax
+                        aftertax : $scope.aftertax,
+                        city: $scope.selectedRegion.name
                     });
                 }
             },500);
