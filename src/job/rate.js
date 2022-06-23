@@ -37,7 +37,8 @@ module.exports = async function getProvinceBaseAndRate (province) {
     };
 
     let regionBaseData = {
-        ...province,
+        id: province.id,
+        name: province.name,
         personalRate: JSON.stringify(personalRate), 
         companyRate: JSON.stringify(companyRate), 
         insuranceBase: JSON.stringify(insuranceBase), 
