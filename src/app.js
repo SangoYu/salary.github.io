@@ -1,3 +1,4 @@
+require('./job');
 let Koa = require('koa');
 let config = require('./config');
 let Router = require('./router');
@@ -6,6 +7,7 @@ let {join} = require('path');
 let convert = require('koa-convert');
 let koaBody = require('koa-body');
 let cors = require('koa-cors');
+
 
 const app = new Koa();
 

@@ -11,6 +11,7 @@
   "author": "sango.yu",
   "license": "MIT",
   "dependencies": {
+    "cron": "^2.0.0",
     "koa": "^2.3.0",
     "koa-body": "^2.5.0",
     "koa-convert": "^1.2.0",

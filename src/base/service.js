@@ -19,7 +19,11 @@ Service.showMessage = async function (message) {
 
 
 Service.getRegionList = async function () {
-    return RegionInfo.findAll();
+    return RegionInfo.findAll({
+        where: {
+            status: 1
+        }
+    });
 }
 
 Service.analytics = async function() {
