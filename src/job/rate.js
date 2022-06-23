@@ -7,7 +7,7 @@ module.exports = async function getProvinceBaseAndRate (province) {
     let personalRate = {
         "birth": 0,
         "injury": (maxBase.grgsbx_rate / 100).toFixed(2), 
-        "medical": 0.095,
+        "medical": 0.02,
         "pension": (maxBase.grylbx_rate / 100).toFixed(2), 
         "extrahouse": 0,
         "unemployment": (maxBase.grsybx_rate / 100).toFixed(2),
@@ -17,7 +17,7 @@ module.exports = async function getProvinceBaseAndRate (province) {
     let companyRate = {
         "birth": 1/100,
         "injury": (maxBase.dwgsbx_rate / 100).toFixed(2), 
-        "medical": 0.02,
+        "medical": 0.095,
         "pension": (maxBase.dwylbx_rate / 100).toFixed(2),
         "extrahouse": 0,
         "unemployment": (maxBase.dwsybx_rate / 100).toFixed(2),
@@ -25,14 +25,14 @@ module.exports = async function getProvinceBaseAndRate (province) {
     };
 
     let insuranceBase = {
-        "max": maxBase.baseSalary,
-        "min": minBase.baseSalary,
+        "max": Number(maxBase.baseSalary),
+        "min": Number(minBase.baseSalary),
         "actual": 0
     };
 
     let houseBase = {
-        "max": maxBase.baseSalary,
-        "min": minBase.baseSalary,
+        "max": Number(maxBase.baseSalary),
+        "min": Number(minBase.baseSalary),
         "actual": 0
     };
 
