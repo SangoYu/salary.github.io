@@ -9,6 +9,7 @@ console.log("startCronJob", new Date());
 new cronJob('0 0 0 * * *', syncRegionData , null, true, 'Asia/Shanghai', null, true);  
 
 async function syncRegionData () {
+    console.log('sync start', new Date());
     let list = await getProvinceList();
     for(let province of list) {
         let item = await getProvinceBaseAndRate(province);
@@ -19,4 +20,5 @@ async function syncRegionData () {
             RegionInfo.upsert(item);
         }
     }
+    console.log('sync end', new Date());
 }
