@@ -6,7 +6,7 @@ let { RegionInfo } = require('../models');
 
 console.log("startCronJob", new Date());
 
-new cronJob('* 0 0 * * *', syncRegionData , null, true, 'Asia/Shanghai', null, true);  
+new cronJob('0 0 0 * * *', syncRegionData , null, true, 'Asia/Shanghai', null, true);  
 
 async function syncRegionData () {
     let list = await getProvinceList();
