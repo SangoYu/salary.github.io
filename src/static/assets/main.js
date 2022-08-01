@@ -260,13 +260,13 @@ app.controller('main', ['$scope', '$http', function ($scope, $http) {
 
     //改变公积金缴纳比率
     $scope.changeHouseRate = function () {
-        $scope.person.rated.house = $scope.company.rated.house = $scope.houseRate / 100;
+        $scope.person.rated.house = $scope.company.rated.house;
         $scope.calculateAll();
     }
 
     //改变补充公积金比率
     $scope.changeExtraRate = function () {
-        $scope.person.rated.extrahouse = $scope.company.rated.extrahouse = $scope.extrahouse / 100;
+        $scope.person.rated.extrahouse = $scope.company.rated.extrahouse;
         $scope.calculateAll();
     };
 

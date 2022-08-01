@@ -221,7 +221,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                             <span ng-bind="company.rated.birth | percent"></span>
                             <div>
                                 <input type="number" ng-change="calculateAll()" ng-model="company.rated.birth">
-
                             </div>
                         </td>
                     </tr>
@@ -232,16 +231,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <td colspan="2">
                             <span ng-bind="person.account.house | number : 2"></span>
                             <span ng-bind="person.rated.house | percent"></span>
-                            <div>
-                                <input type="number" ng-change="calculateAll()" ng-model="person.rated.house">
-                            </div>
                         </td>
                         <td colspan="2">
                             <span ng-bind="company.account.house | number : 2"></span>
                             <span ng-bind="company.rated.house | percent"></span>
                             <div>
-                                <input type="number" ng-change="calculateAll()" ng-model="company.rated.house">
-
+                                <input type="number" ng-change="changeHouseRate()" ng-model="company.rated.house">
                             </div>
                         </td>
                     </tr>
@@ -257,7 +252,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                             <span ng-bind="company.account.extrahouse | number : 2"></span>
                             <span ng-bind="company.rated.extrahouse | percent"></span>
                             <div>
-                                <input type="number" ng-change="calculateAll()" ng-model="company.rated.extrahouse">
+                                <input type="number" ng-change="changeExtraRate()" ng-model="company.rated.extrahouse">
 
                             </div>
                         </td>
